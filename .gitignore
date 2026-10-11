@@ -1,0 +1,19 @@
+# Dependencies & build output
+node_modules
+dist
+dist-single
+.vite
+*.local
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*

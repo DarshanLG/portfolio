@@ -16,8 +16,12 @@ export const profile = {
   resume: './resume.pdf',
 
   // Drop your files into /public and set these, e.g. './hero.mp4' and './portrait.jpg'
+  // hero.webm carries an alpha channel so the giant background name shows
+  // through around the figure; hero.mp4 is the fallback for browsers that
+  // can't decode VP9 alpha (notably Safari), where the backdrop stays opaque.
   heroVideo: './hero.mp4',
-  heroPoster: './hero-poster.jpg',
+  heroVideoAlpha: './hero.webm',
+  heroPoster: './hero-poster.png',
   photo: './portrait.jpg',
 }
 

@@ -91,13 +91,19 @@ export default function Hero() {
               <img src={profile.heroPoster} alt={`${profile.fullName}, ${profile.title.join(' ')}`} />
             ) : (
               <video
-                src={profile.heroVideo}
                 poster={profile.heroPoster || undefined}
                 autoPlay muted loop playsInline
                 preload="auto"
                 disablePictureInPicture
                 aria-label={`${profile.firstName} introducing himself`}
-              />
+              >
+                {/* WebM first: it has the alpha channel. Browsers that can't
+                    decode VP9 alpha skip it and take the opaque MP4. */}
+                {profile.heroVideoAlpha && (
+                  <source src={profile.heroVideoAlpha} type="video/webm" />
+                )}
+                <source src={profile.heroVideo} type="video/mp4" />
+              </video>
             )
           ) : (
             <>

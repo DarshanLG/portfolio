@@ -37,6 +37,15 @@ export function onVisible(fn) {
   return () => document.removeEventListener('visibilitychange', handler)
 }
 
+// A revealed element is done animating: hand it back to the stylesheet. The
+// class lifts the CSS hiding rule, and clearing GSAP's inline transform lets
+// hover effects (e.g. .moment:hover) work again and drops the will-change hint.
+function settle(el) {
+  gsap.killTweensOf(el)
+  el.classList.add('rv-done')
+  gsap.set(el, { clearProps: 'transform,opacity' })
+}
+
 export default function App() {
   // Gentle scroll reveals for anything marked .rv
   useEffect(() => {
@@ -57,6 +66,7 @@ export default function App() {
             {
               y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
               scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+              onComplete: () => settle(el),
             }
           )
         })
@@ -75,9 +85,7 @@ export default function App() {
         gsap.utils.toArray('.rv').forEach((el) => {
           const { top, bottom } = el.getBoundingClientRect()
           const onScreen = top < window.innerHeight && bottom > 0
-          if (onScreen && Number(getComputedStyle(el).opacity) === 0) {
-            gsap.set(el, { y: 0, opacity: 1 })
-          }
+          if (onScreen && Number(getComputedStyle(el).opacity) === 0) settle(el)
         })
       }, 2500)
     })

@@ -13,56 +13,121 @@ function bars(seed) {
   })
 }
 
+// Progressive resistance past a boundary: the further you pull, the less it
+// follows, and it never passes `dimension` beyond the edge.
+function rubberband(overshoot, dimension, constant = 0.55) {
+  return (overshoot * dimension * constant) / (dimension + constant * Math.abs(overshoot))
+}
+
 // An ID card hanging from a lanyard. Drag it; it swings back like a pendulum.
+//
+// The swing is a spring described the way Apple describes them: `response` is
+// roughly the period in seconds and `damping` is the damping ratio (1 = settles
+// with no overshoot). A lanyard really does swing, so it is deliberately
+// under-damped, unless the reader asked for reduced motion, in which case it
+// eases straight back with no swing.
 function Badge() {
   const stage = useRef(null)
   const arm = useRef(null)
 
   useEffect(() => {
     const el = arm.current
-    let angle = reduced() ? 0 : 0.32
-    let vel = 0
-    let dragging = false
-    let last = 0
-    let raf
-    const k = 0.028, damp = 0.965, L = 300
+    const card = el.querySelector('.card-id')
+    const calm = reduced()
+    const response = 0.65, damping = calm ? 1 : 0.12
+    const w0 = (2 * Math.PI) / response       // natural frequency, rad/s
+    const LIMIT = 1.1                          // soft edge of the drag, rad
+    const MAX_W = 12                           // cap on a thrown swing, rad/s
 
-    const pivot = () => {
-      const r = stage.current.getBoundingClientRect()
-      return { x: r.left + r.width / 2, y: r.top }
-    }
-    const tick = () => {
-      if (!dragging) { vel += -k * Math.sin(angle); vel *= damp; angle += vel }
-      el.style.transform = `rotate(${angle}rad)`
+    let angle = calm ? 0 : 0.32                // rad
+    let omega = 0                              // rad/s
+    let dragging = false
+    let grab = 0                               // card angle minus pointer angle at grab
+    let samples = []                           // recent { t, a } for release velocity
+    let raf = 0, prev = 0
+
+    const render = () => { el.style.transform = `rotate(${angle}rad)` }
+
+    // Time-based, so it swings at the same speed on 60 Hz and 120 Hz screens.
+    const tick = (now) => {
+      const dt = Math.min((now - (prev || now)) / 1000, 1 / 30)
+      prev = now
+      if (!dragging) {
+        // semi-implicit Euler on a damped pendulum
+        omega += (-w0 * w0 * Math.sin(angle) - 2 * damping * w0 * omega) * dt
+        angle += omega * dt
+      }
+      render()
+      // Go idle once it has settled instead of repainting a still card forever.
+      if (!dragging && Math.abs(angle) < 1e-3 && Math.abs(omega) < 1e-3) {
+        angle = 0; omega = 0; render(); raf = 0; prev = 0
+        return
+      }
       raf = requestAnimationFrame(tick)
+    }
+    const wake = () => { if (!raf) raf = requestAnimationFrame(tick) }
+
+    const pointerAngle = (e) => {
+      const r = stage.current.getBoundingClientRect()
+      const px = r.left + r.width / 2, py = r.top
+      return Math.atan2(-(e.clientX - px), Math.max(40, e.clientY - py))
+    }
+
+    const down = (e) => {
+      if (e.button !== 0) return
+      dragging = true
+      // Keep the point they grabbed under the pointer, rather than snapping
+      // the card's centre line to it.
+      grab = angle - pointerAngle(e)
+      omega = 0
+      samples = [{ t: e.timeStamp, a: angle }]
+      card.setPointerCapture(e.pointerId)
+      card.classList.add('held')
+      wake()
     }
     const move = (e) => {
       if (!dragging) return
-      const p = pivot()
-      const a = Math.atan2(-(e.clientX - p.x), Math.max(40, e.clientY - p.y))
-      const next = Math.max(-1.1, Math.min(1.1, a))
-      vel = next - last
-      last = next
-      angle = next
+      const raw = pointerAngle(e) + grab
+      const over = Math.abs(raw) - LIMIT
+      angle = over > 0 ? Math.sign(raw) * (LIMIT + rubberband(over, 0.4)) : raw
+      samples.push({ t: e.timeStamp, a: angle })
+      // only the last ~100ms says anything about the release
+      while (samples.length > 2 && e.timeStamp - samples[0].t > 100) samples.shift()
     }
-    const down = (e) => {
-      dragging = true; last = angle
-      e.currentTarget.setPointerCapture?.(e.pointerId)
+    const up = (e) => {
+      if (!dragging) return
+      dragging = false
+      card.classList.remove('held')
+      // Hand the pointer's velocity to the spring so there is no seam between
+      // dragging and swinging. If they held still before letting go, it's 0.
+      const first = samples[0], last = samples[samples.length - 1]
+      const span = (last.t - first.t) / 1000
+      const stale = e.timeStamp - last.t > 50
+      const v = !stale && span > 0 ? (last.a - first.a) / span : 0
+      omega = Math.max(-MAX_W, Math.min(MAX_W, v))
+      prev = 0
+      wake()
     }
-    const up = () => { dragging = false }
-    const card = el.querySelector('.card-id')
+
     card.addEventListener('pointerdown', down)
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', up)
-    // a small nudge whenever the user scrolls into it
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !reduced()) vel += 0.02 }, { threshold: .4 })
+    card.addEventListener('pointermove', move)
+    card.addEventListener('pointerup', up)
+    card.addEventListener('pointercancel', up)
+    card.addEventListener('lostpointercapture', up)
+    // a small nudge whenever it scrolls into view
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !calm && !dragging) { omega += 1.2; wake() }
+    }, { threshold: .4 })
     io.observe(stage.current)
-    raf = requestAnimationFrame(tick)
+    render()
+    wake()
     return () => {
       cancelAnimationFrame(raf); io.disconnect()
       card.removeEventListener('pointerdown', down)
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
+      card.removeEventListener('pointermove', move)
+      card.removeEventListener('pointerup', up)
+      card.removeEventListener('pointercancel', up)
+      card.removeEventListener('lostpointercapture', up)
     }
   }, [])
 

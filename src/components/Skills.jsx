@@ -31,9 +31,11 @@ export default function Skills() {
               <button
                 key={s.s}
                 className={`el f-${s.f} ${cur === s ? 'on' : ''} ${fam !== 'all' && fam !== s.f ? 'dim' : ''}`}
-                onMouseEnter={() => setCur(s)}
+                // Respond on press, not release, so a tap on a phone shows
+                // the detail straight away.
+                onPointerEnter={(e) => e.pointerType === 'mouse' && setCur(s)}
+                onPointerDown={() => setCur(s)}
                 onFocus={() => setCur(s)}
-                onClick={() => setCur(s)}
                 aria-label={`${s.name}, ${famLabel(s.f)}`}
               >
                 <small>{String(idx(s)).padStart(2, '0')}</small>

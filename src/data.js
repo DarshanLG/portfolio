@@ -16,8 +16,9 @@ export const profile = {
   resume: './resume.pdf',
 
   // Drop your files into /public and set these, e.g. './hero.mp4' and './portrait.jpg'
-  heroVideo: '',
-  photo: '',
+  heroVideo: './hero.mp4',
+  heroPoster: './hero-poster.jpg',
+  photo: './portrait.jpg',
 }
 
 export const heroStats = [

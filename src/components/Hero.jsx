@@ -85,7 +85,20 @@ export default function Hero() {
 
         <div className="figure">
           {profile.heroVideo ? (
-            <video src={profile.heroVideo} autoPlay muted loop playsInline aria-label={`${profile.firstName} introducing himself`} />
+            // A looping autoplay clip is motion like any other, so under
+            // prefers-reduced-motion the still frame stands in for it.
+            reduced() && profile.heroPoster ? (
+              <img src={profile.heroPoster} alt={`${profile.fullName}, ${profile.title.join(' ')}`} />
+            ) : (
+              <video
+                src={profile.heroVideo}
+                poster={profile.heroPoster || undefined}
+                autoPlay muted loop playsInline
+                preload="auto"
+                disablePictureInPicture
+                aria-label={`${profile.firstName} introducing himself`}
+              />
+            )
           ) : (
             <>
               <StandIn />

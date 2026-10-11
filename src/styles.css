@@ -1,15 +1,21 @@
 /* Layout: a single editorial column on warm paper; navy ink, italic-serif accents, mono labels.
    Deliberately one light theme to match the reference design. */
 :root {
-  --paper: #f1efe8;
-  --paper-2: #e9e6dc;
-  --card: #fbfaf6;
+  /* --paper is sampled from the hero video's background (#e8e4da, the modal
+     colour over the whole clip) so the figure sits on the page with no visible
+     seam. The rest of the neutral ramp is offset from it by the same amounts it
+     had against the original warmer paper, which keeps every hover, border and
+     card at the contrast it was designed with. Re-sample and shift all six
+     together if the video is ever replaced. */
+  --paper: #e8e4da;
+  --paper-2: #e0dbce;
+  --card: #f2efe8;
   --ink: #1c1d2c;
   --ink-2: #545667;
   --ink-3: #8b8c98;
-  --line: #d9d6cb;
+  --line: #d0cbbd;
   --navy: #262a48;
-  --ghost: #e2dfd4;
+  --ghost: #d9d4c6;
   --accent: #4c4fc0;
 
   --f-display: 'Geist', 'Helvetica Neue', Arial, sans-serif;
@@ -115,7 +121,7 @@ p { margin: 0; }
 .hero-copy h1 .dot { color: var(--accent); }
 .hero-copy .tag { color: var(--ink-2); max-width: 34ch; font-size: 15px; }
 .figure { position: relative; align-self: end; height: clamp(420px, 66vh, 680px); display: grid; }
-.figure video { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
+.figure video, .figure img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
 .figure .standin { width: 100%; height: 100%; }
 .figure .slot {
   position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);

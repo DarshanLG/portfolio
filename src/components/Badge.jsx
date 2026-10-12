@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { profile, about, heroStats } from '../data.js'
 import { Arrow, Down } from './Icons.jsx'
-import { reduced } from '../App.jsx'
+import { reduced, resumeProps } from '../App.jsx'
 
 // Deterministic barcode from a string
 function bars(seed) {
@@ -129,11 +129,12 @@ export default function Badge() {
       if (travel <= TAP && !e.target.closest('a, button')) setFlipped((f) => !f)
     }
 
-    card.addEventListener('pointerdown', down)
-    card.addEventListener('pointermove', move)
-    card.addEventListener('pointerup', up)
-    card.addEventListener('pointercancel', up)
-    card.addEventListener('lostpointercapture', up)
+    // pointerup, pointercancel and lostpointercapture all end a drag.
+    const bound = [
+      ['pointerdown', down], ['pointermove', move], ['pointerup', up],
+      ['pointercancel', up], ['lostpointercapture', up],
+    ]
+    bound.forEach(([type, fn]) => card.addEventListener(type, fn))
     // a small nudge whenever it scrolls into view
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting && !calm && !dragging) { omega += 1.2; wake() }
@@ -143,11 +144,7 @@ export default function Badge() {
     wake()
     return () => {
       cancelAnimationFrame(raf); io.disconnect()
-      card.removeEventListener('pointerdown', down)
-      card.removeEventListener('pointermove', move)
-      card.removeEventListener('pointerup', up)
-      card.removeEventListener('pointercancel', up)
-      card.removeEventListener('lostpointercapture', up)
+      bound.forEach(([type, fn]) => card.removeEventListener(type, fn))
     }
   }, [])
 
@@ -184,7 +181,7 @@ export default function Badge() {
                 <div className="body">
                   <b>{profile.fullName.toUpperCase()}</b>
                   <em>Full stack · Backend · AI</em>
-                  <div className="meta"><span>{about.badgeId}</span><span>LONG BEACH, CA</span></div>
+                  <div className="meta"><span>{about.badgeId}</span><span>{profile.location.toUpperCase()}</span></div>
                   <div className="barcode" aria-hidden="true">
                     {bars(profile.fullName).map((w, i) => <i key={i} style={{ width: w }} />)}
                   </div>
@@ -203,15 +200,7 @@ export default function Badge() {
                   <div className="back-actions">
                     <a className="btn dark" href="#work" tabIndex={flipped ? 0 : -1}>Explore work <Arrow /></a>
                     <a className="btn" href="#contact" tabIndex={flipped ? 0 : -1}>Let's talk</a>
-                    <a
-                      className={`btn plain ${profile.resumeEnabled ? '' : 'is-off'}`}
-                      href={profile.resumeEnabled ? profile.resume : undefined}
-                      target="_blank" rel="noreferrer"
-                      aria-disabled={profile.resumeEnabled ? undefined : 'true'}
-                      tabIndex={profile.resumeEnabled && flipped ? 0 : -1}
-                    >
-                      Résumé <Down />
-                    </a>
+                    <a {...resumeProps('btn plain', flipped)}>Résumé <Down /></a>
                   </div>
                 </div>
               </div>

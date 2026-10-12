@@ -77,7 +77,10 @@ p { margin: 0; }
 .label {
   font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3);
 }
-.section { padding-block: clamp(80px, 12vw, 150px); }
+/* Each section pads top and bottom, so the gap you see between two of them is
+   double this. At the old clamp (150px cap) that was 300px of blank between
+   every section. */
+.section { padding-block: clamp(60px, 7vw, 80px); }
 .section-head { display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 60px); }
 .section-head h2 {
   font-size: clamp(2.5rem, 6.4vw, 5.25rem); line-height: .98; letter-spacing: -.035em; font-weight: 700;
@@ -223,12 +226,6 @@ p { margin: 0; }
    against an auto-sized grid row it does not, and the clip silently falls back
    to its intrinsic size. */
 .figure video, .figure img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
-.figure .standin { width: 100%; height: 100%; }
-.figure .slot {
-  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
-  white-space: nowrap; background: var(--card); border: 1px dashed var(--ink-3); border-radius: 999px;
-  padding: 6px 12px; font-family: var(--f-mono); font-size: .6563rem; letter-spacing: .08em; color: var(--ink-2);
-}
 /* The hero's third column is intentionally empty: its buttons and stats now
    live on the back of the ID badge in About. The track stays so the video and
    copy keep the positions they had. */
@@ -302,7 +299,6 @@ p { margin: 0; }
 .card-id .top .mono { width: 26px; height: 26px; border-radius: 50%; background: var(--paper); color: var(--navy); display: grid; place-items: center; font-family: var(--f-mono); font-size: .625rem; }
 .card-id .top b { font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .18em; font-weight: 500; display: block; }
 .card-id .top small { font-size: .625rem; opacity: .65; }
-.card-id .hole { position: absolute; top: 8px; left: 50%; width: 40px; height: 6px; margin-left: -20px; border-radius: 4px; background: var(--paper); opacity: .35; }
 .card-id .photo {
   width: 112px; height: 132px; margin: -22px auto 0; border-radius: 14px; border: 4px solid var(--card);
   background: linear-gradient(160deg, #d9d5c8, #b9b4a5); display: grid; place-items: center; overflow: hidden; position: relative;
@@ -457,49 +453,50 @@ p { margin: 0; }
   .scene-ui { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* ── work: stacked accordion ─────────────── */
-.stack { display: flex; gap: 10px; height: 560px; }
-.panel {
-  position: relative; border-radius: 22px; background: var(--card); border: 1px solid var(--line); overflow: hidden;
-  /* Spring, not ease-in-out: an ease-in curve spends its first frames barely
-     moving, which reads as lag after the click. A CSS transition re-targets
-     from the current width, so clicking another panel mid-flight is smooth. */
-  flex: 0 0 76px; transition: flex-grow var(--spring) var(--ease-spring), flex-basis var(--spring) var(--ease-spring), background-color .3s;
-  cursor: pointer; min-width: 0;
+/* ── work: project cards ─────────────────── */
+/* auto-fit rather than a fixed column count, so a fifth project reflows
+   instead of leaving a hole in the row. Matches the certification grid. */
+.work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(248px, 1fr)); gap: 12px; }
+.work-card {
+  position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  padding: 16px; display: grid; gap: 16px; align-content: start;
+  transition: transform var(--spring) var(--ease-spring), box-shadow var(--spring) var(--ease-spring);
 }
-.panel.open { flex: 1 1 auto; cursor: default; }
-@media (hover: hover) and (min-width: 861px) {
-  /* a closed panel leans open under the pointer, hinting at what a click does */
-  .panel:not(.open):hover { background: var(--paper-2); flex-basis: 90px; }
+@media (hover: hover) {
+  .work-card:hover { transform: translateY(-4px); box-shadow: 0 18px 34px -22px rgba(28, 29, 44, .45); }
+  .work-card:hover .work-open { color: var(--accent); }
 }
-.panel:not(.open):active .spine .plus { transform: scale(.9); transition: transform var(--press); }
-.panel .spine {
-  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 22px 0;
-  transition: opacity .3s; border: 0; background: none; cursor: pointer; width: 100%;
+.work-cover {
+  border-radius: 13px; background: var(--paper-2); overflow: hidden;
+  aspect-ratio: 4 / 3; display: grid; place-items: center;
 }
-.panel .spine .t { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 600; font-size: 1rem; letter-spacing: -.01em; white-space: nowrap; }
-.panel .spine .plus { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); color: var(--paper); display: grid; place-items: center; font-size: 1rem; transition: transform var(--spring-fast) var(--ease-spring); }
-.panel.open .spine { opacity: 0; pointer-events: none; }
-.panel .inner {
-  position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 32px; padding: 34px;
-  opacity: 0; pointer-events: none; transition: opacity .15s ease; min-width: 640px;
+.work-cover svg { width: 100%; height: 100%; }
+.work-meta { display: grid; gap: 7px; }
+.work-meta h3 { font-size: 1.0625rem; letter-spacing: -.02em; line-height: 1.25; }
+/* Stretched over the card, so the card is one target while the <h3> stays a
+   heading. */
+.work-open {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
+  transition: color .2s;
 }
-/* Fades in once the panel is most of the way open (the spring is ~80% there
-   at .2s), and fades out fast on close so it never shows squeezed. */
-.panel.open .inner { opacity: 1; pointer-events: auto; transition: opacity .3s ease .2s; }
-.inner .txt { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.inner h3 { font-size: clamp(1.75rem, 3vw, 2.5rem); letter-spacing: -.035em; line-height: 1.02; }
-.inner .blurb { color: var(--ink-2); }
-.inner ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
-.inner li { font-size: .875rem; display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 8px; }
-.inner li::before { content: ''; width: 6px; height: 6px; margin-top: 8px; border-radius: 2px; background: var(--accent); }
+.work-open::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.work-open:focus-visible { outline: none; }
+.work-card:has(.work-open:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+.work-meta p { color: var(--ink-2); font-size: .8125rem; line-height: 1.5; }
+
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tags span { font-family: var(--f-mono); font-size: .6875rem; padding: 4px 9px; border-radius: 6px; background: var(--paper-2); color: var(--ink-2); }
-.inner .foot { margin-top: auto; display: flex; gap: 8px; align-items: center; }
-.cover { border-radius: 16px; background: var(--paper-2); overflow: hidden; display: grid; place-items: center; min-height: 0; }
-.cover svg { width: 100%; height: 100%; }
 
-/* ── journey timeline ────────────────────── */
+/* The project cover, shown large inside the dialog. */
+.dlg-cover {
+  border-radius: 14px; background: var(--paper-2); overflow: hidden;
+  aspect-ratio: 16 / 11; display: grid; place-items: center;
+}
+.dlg-cover svg { width: 100%; height: 100%; }
+.dlg-lead { color: var(--ink); font-size: 1rem; line-height: 1.5; }
+
+
+/* ── experience + education timeline ────────────────────── */
 .tl { display: grid; }
 .tl-item { display: grid; grid-template-columns: 200px 28px minmax(0, 1fr); gap: 20px; }
 .tl-years { text-align: right; padding-top: 26px; }
@@ -509,7 +506,78 @@ p { margin: 0; }
 .tl-rail::before { content: ''; position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
 .tl-rail i { position: relative; margin-top: 38px; width: 13px; height: 13px; border-radius: 50%; background: var(--paper); border: 2px solid var(--navy); }
 .tl-item.edu .tl-rail i { background: var(--navy); }
-.tl-card { padding: 24px 0 34px; display: grid; gap: 8px; border-bottom: 1px solid var(--line); }
+.tl-card { position: relative; padding: 24px 0 34px; display: grid; gap: 8px; border-bottom: 1px solid var(--line); }
+
+/* A clickable role. The button inside the heading carries the accessible name
+   and is stretched over the whole card, so the card reads as one target while
+   the <h3> stays a heading. */
+.tl-card.opens { padding-inline: 18px; border-radius: 14px; transition: background-color .25s; }
+.tl-card.opens::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  border: 1px solid transparent; transition: border-color .25s;
+}
+.tl-open {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
+}
+.tl-open::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.tl-open:focus-visible { outline: none; }
+.tl-card.opens:has(.tl-open:focus-visible)::after { border-color: var(--accent); }
+.tl-more {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 4px;
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-3); transition: color .25s, gap .25s;
+}
+.tl-more svg { width: 13px; height: 13px; }
+@media (hover: hover) {
+  .tl-card.opens:hover { background: color-mix(in srgb, var(--card) 70%, transparent); }
+  .tl-card.opens:hover::after { border-color: var(--line); }
+  .tl-card.opens:hover .tl-more { color: var(--ink); gap: 10px; }
+}
+
+/* ── role dialog ─────────────────────────── */
+.dlg-back {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+  padding: clamp(16px, 5vw, 48px);
+  background: color-mix(in srgb, var(--ink) 42%, transparent);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: dlg-in .2s ease;
+}
+.dlg {
+  position: relative; width: min(680px, 100%); max-height: min(78vh, 760px); overflow-y: auto;
+  background: var(--card); border: 1px solid var(--line); border-radius: 22px;
+  padding: clamp(24px, 4vw, 40px);
+  box-shadow: 0 40px 90px -30px rgba(28, 29, 44, .5);
+  animation: dlg-rise .26s var(--ease-spring, cubic-bezier(.2, .8, .2, 1));
+}
+.dlg-x {
+  position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  background: var(--paper); border: 1px solid var(--line); color: var(--ink-2); transition: all .2s;
+}
+.dlg-x svg { width: 15px; height: 15px; }
+@media (hover: hover) { .dlg-x:hover { background: var(--navy); color: var(--paper); border-color: var(--navy); } }
+.dlg-head { display: grid; gap: 7px; padding-right: 40px; margin-bottom: 22px; }
+.dlg-head h3 { font-size: clamp(1.375rem, 2.4vw, 1.75rem); letter-spacing: -.025em; line-height: 1.15; }
+.dlg-head .org { color: var(--ink-2); font-size: .9375rem; }
+.dlg-head .org em { font-family: var(--f-serif); font-size: 1.0625rem; color: var(--ink-3); }
+.dlg-body { display: grid; gap: 20px; }
+.dlg-points { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px; }
+.dlg-points li {
+  position: relative; padding-left: 20px; color: var(--ink-2); font-size: .9375rem; line-height: 1.55;
+}
+/* A labelled block inside the dialog -- coursework, the transcript button. */
+.dlg-group { display: grid; gap: 10px; justify-items: start; }
+.dlg-group .label { color: var(--ink-3); }
+
+.dlg-points li::before {
+  content: ''; position: absolute; left: 0; top: .55em; width: 6px; height: 6px;
+  border-radius: 2px; background: var(--accent);
+}
+@keyframes dlg-in { from { opacity: 0 } }
+@keyframes dlg-rise { from { opacity: 0; transform: translateY(14px) scale(.98) } }
+@media (prefers-reduced-motion: reduce) {
+  .dlg-back, .dlg { animation: none; }
+}
 .tl-card .kind { display: inline-flex; width: fit-content; font-family: var(--f-mono); font-size: .6563rem; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--line); color: var(--ink-2); }
 .tl-item.edu .kind { background: var(--navy); color: var(--paper); border-color: var(--navy); }
 .tl-card h3 { font-size: 1.375rem; letter-spacing: -.02em; }
@@ -517,20 +585,39 @@ p { margin: 0; }
 .tl-card .org em { font-family: var(--f-serif); font-size: 1.0625rem; color: var(--ink-3); }
 .tl-card p { color: var(--ink-2); max-width: 64ch; font-size: .9375rem; }
 
-.learn { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 40px; margin-top: clamp(70px, 9vw, 120px); align-items: start; }
-.learn h3 { font-size: clamp(2.25rem, 4.6vw, 3.75rem); letter-spacing: -.04em; line-height: 1; }
-.learn h3 .serif { color: var(--ink-2); }
-.learn p { color: var(--ink-2); margin-top: 14px; max-width: 36ch; }
-.certs { display: grid; border-top: 1px solid var(--line); }
-.cert { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px 14px; border-bottom: 1px solid var(--line); border-radius: 12px; transition: background .25s, color .25s; }
-@media (hover: hover) {
-  .cert:hover { background: var(--navy); color: var(--paper); }
-  .cert:hover small, .cert:hover .yr, .cert:hover .n { color: var(--paper-2); }
+/* Heading above, cards below -- the same shape as the Achievements grid. */
+.learn { margin-top: clamp(70px, 9vw, 120px); display: grid; gap: clamp(28px, 4vw, 44px); }
+.learn-head h3 { font-size: clamp(2.25rem, 4.6vw, 3.75rem); letter-spacing: -.04em; line-height: 1; }
+.learn-head h3 .serif { color: var(--ink-2); }
+.learn-head p { color: var(--ink-2); margin-top: 14px; max-width: 46ch; }
+
+/* auto-fit rather than a fixed column count, so adding a fifth certification
+   reflows instead of leaving a hole in the row. */
+.certs { display: grid; grid-template-columns: repeat(auto-fit, minmax(248px, 1fr)); gap: 12px; }
+.cert-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px;
+  display: grid; gap: 16px; align-content: space-between; min-height: 212px;
+  transition: transform var(--spring) var(--ease-spring), box-shadow var(--spring) var(--ease-spring);
 }
-.cert .n { font-family: var(--f-mono); font-size: .6875rem; color: var(--ink-3); }
-.cert b { font-weight: 600; font-size: .9375rem; display: block; }
-.cert small { color: var(--ink-3); font-size: .75rem; }
-.cert .yr { font-family: var(--f-mono); font-size: .75rem; color: var(--ink-2); }
+@media (hover: hover) {
+  .cert-card:hover { transform: translateY(-4px); box-shadow: 0 18px 34px -22px rgba(28, 29, 44, .45); }
+}
+.cert-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.cert-mark {
+  width: 42px; height: 42px; border-radius: 12px; flex: none; overflow: hidden;
+  background: var(--navy); color: var(--paper); display: grid; place-items: center;
+  font-family: var(--f-mono); font-size: .8125rem; letter-spacing: .02em;
+}
+.cert-mark img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+.cert-meta h4 { font-size: .9375rem; font-weight: 600; line-height: 1.3; letter-spacing: -.01em; }
+.cert-meta small { display: block; margin-top: 4px; color: var(--ink-3); font-size: .8125rem; }
+.cert-sub {
+  display: block; margin-top: 5px; font-family: var(--f-mono); font-size: .625rem;
+  letter-spacing: .08em; color: var(--ink-3);
+}
+.cert-acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.cert-acts .btn { padding: 7px 13px; font-size: .75rem; }
+.cert-acts .btn svg { width: 12px; height: 12px; }
 
 /* ── moments ─────────────────────────────── */
 .moments { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
@@ -593,19 +680,10 @@ p { margin: 0; }
   .figure { order: -1; width: min(320px, 78vw); height: auto; aspect-ratio: 576 / 1024; left: 0; top: 0; }
   .badge-stage { height: 520px; }
   .ghost { top: 90px; }
-  .stack { flex-direction: column; height: auto; }
-  .panel { flex: none; min-height: 68px; }
-  .panel.open { flex: none; }
-  .panel .spine { position: relative; flex-direction: row; padding: 18px 20px; }
-  .panel .spine .t { writing-mode: horizontal-tb; transform: none; }
-  .panel.open .spine { display: none; }
-  .panel .inner { position: relative; display: none; min-width: 0; grid-template-columns: minmax(0, 1fr); padding: 22px; }
-  .panel.open .inner { display: grid; }
-  .cover { aspect-ratio: 16 / 10; }
   .tl-item { grid-template-columns: 82px 20px minmax(0, 1fr); gap: 12px; }
   .tl-years b { font-size: 1.75rem; }
   .tl-years span { font-size: 1.0625rem; }
-  .learn, .contact-grid { grid-template-columns: minmax(0, 1fr); }
+  .contact-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 620px) {
   .about-grid { grid-template-columns: minmax(0, 1fr); }
@@ -630,7 +708,7 @@ p { margin: 0; }
     animation: none !important;
   }
   .btn:hover, .btn:active, .btn svg, .chip:active, .el, .el.on, .el:hover, .el:active, .sk:hover, .sk:active,
-  .moment:hover, .links a > *, .copy:active, .card-id.held, .panel .spine .plus { transform: none !important; }
+  .moment:hover, .links a > *, .copy:active, .card-id.held, .work-card:hover, .cert-card:hover { transform: none !important; }
   /* The badge doesn't turn over: the faces cross-fade in place instead. */
   .card-3d.flipped, .card-face.back { transform: none; }
   .card-face.back { opacity: 0; pointer-events: none; }
@@ -647,5 +725,5 @@ p { margin: 0; }
 @media (prefers-contrast: more) {
   :root { --ink-2: #33354a; --ink-3: #4f5163; --line: #8b8c98; }
   .pill { background: var(--card); backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--ink); }
-  .btn, .chip, .panel, .moment, .detail, .sk, .sk-readout { border-color: var(--ink-2); }
+  .btn, .chip, .work-card, .cert-card, .moment, .detail, .sk, .sk-readout { border-color: var(--ink-2); }
 }

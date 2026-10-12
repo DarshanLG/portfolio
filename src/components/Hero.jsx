@@ -4,48 +4,6 @@ import { profile } from '../data.js'
 import Badge from './Badge.jsx'
 import { reduced, onVisible } from '../App.jsx'
 
-// Placeholder figure shown until profile.heroVideo is set.
-function StandIn() {
-  return (
-    <svg className="standin" viewBox="0 0 220 640" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-      <defs>
-        <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#cfcabb" /><stop offset="1" stopColor="#bdb7a6" />
-        </linearGradient>
-        <linearGradient id="sh" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#fbfaf6" /><stop offset="1" stopColor="#e4e0d4" />
-        </linearGradient>
-        <linearGradient id="tr" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#3b3f5c" /><stop offset=".5" stopColor="#2b2f4a" /><stop offset="1" stopColor="#3b3f5c" />
-        </linearGradient>
-        <radialGradient id="fl" cx=".5" cy=".5" r=".5">
-          <stop offset="0" stopColor="#1c1d2c" stopOpacity=".22" /><stop offset="1" stopColor="#1c1d2c" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <ellipse cx="110" cy="628" rx="86" ry="10" fill="url(#fl)" />
-      {/* hair + head */}
-      <path d="M78 66c0-32 18-50 33-50s34 18 34 50c0 10-2 20-6 28H84c-4-8-6-18-6-28z" fill="#2a2a33" />
-      <ellipse cx="111" cy="74" rx="26" ry="32" fill="url(#sk)" />
-      <path d="M84 60c6-26 48-30 56-2-10-10-40-14-56 2z" fill="#2a2a33" />
-      <rect x="100" y="100" width="22" height="22" rx="8" fill="url(#sk)" />
-      {/* shirt */}
-      <path d="M58 136c6-14 26-20 52-20s46 6 52 20l10 128c1 10-6 16-14 16H62c-8 0-15-6-14-16z" fill="url(#sh)" />
-      <path d="M100 118l10 22 10-22" fill="none" stroke="#d6d2c5" strokeWidth="2" />
-      {/* arms */}
-      <path d="M58 140c-10 6-16 30-18 70l-4 74c0 8 12 10 14 2l10-70z" fill="url(#sh)" />
-      <path d="M162 140c10 6 16 30 18 70l4 74c0 8-12 10-14 2l-10-70z" fill="url(#sh)" />
-      <ellipse cx="42" cy="296" rx="9" ry="12" fill="url(#sk)" />
-      <ellipse cx="178" cy="296" rx="9" ry="12" fill="url(#sk)" />
-      {/* trousers */}
-      <path d="M64 266h92l10 344c0 6-6 10-12 10h-28c-6 0-10-4-10-10l-6-250-6 250c0 6-4 10-10 10H66c-6 0-12-4-12-10z" fill="url(#tr)" />
-      <path d="M110 300v60" stroke="#20233a" strokeWidth="2" />
-      {/* shoes */}
-      <path d="M58 612h44c4 0 6 6 2 10H56c-4-4-2-10 2-10z" fill="#f6f4ee" />
-      <path d="M118 612h44c4 0 6 6 2 10h-48c-4-4-2-10 2-10z" fill="#f6f4ee" />
-    </svg>
-  )
-}
-
 // Where the figure's head sits inside the video frame, measured from the clip
 // itself and averaged over its length (he gestures, so the horizontal centre
 // drifts; the top of his head barely moves). Re-measure if the clip changes.
@@ -100,7 +58,6 @@ export default function Hero() {
       }
       const firstA = at(1), secondA = at(5)
 
-
       // Size him from what is left over, rather than from a guess. His soles
       // sit just inside the bottom of the hero and the top of his head is one
       // lanyard's length below the letter; whatever space remains between the
@@ -153,12 +110,8 @@ export default function Hero() {
         if (headTop !== null) {
           hero.style.setProperty('--rig-top', `${(headTop - sb.top).toFixed(1)}px`)
         }
-        // Card top meets the top of his head. Measured from the hanging point,
-        // so the lanyard spans exactly the gap between them. Deliberately
-        // derived from the figure and not from the stage's own height, which
-        // stays fixed -- sizing the stage from this would move the row, the
-        // figure and the head with it.
-        // Lanyard keeps its own length; the card follows it down.
+        // The lanyard keeps its own fixed length and the card hangs below
+        // it. The figure was sized around that above, so this never moves.
         hero.style.setProperty('--card-top', `${MIN_STRAP}px`)
       }
     }
@@ -208,7 +161,7 @@ export default function Hero() {
   return (
     <section className="hero" id="top" ref={root}>
       {/* Letters are individually wrapped so the figure and the lanyard can be
-          lined up against specific ones -- see alignToGhost below. */}
+          lined up against specific ones -- see place() above. */}
       <div className="ghost" aria-hidden="true">
         {[...profile.firstName.toUpperCase()].map((ch, i) => <span key={i}>{ch}</span>)}
       </div>
@@ -222,32 +175,25 @@ export default function Hero() {
         </div>
 
         <div className="figure">
-          {profile.heroVideo ? (
-            // A looping autoplay clip is motion like any other, so under
-            // prefers-reduced-motion the still frame stands in for it.
-            reduced() && profile.heroPoster ? (
-              <img src={profile.heroPoster} alt={`${profile.fullName}, ${profile.title.join(' ')}`} />
-            ) : (
-              <video
-                poster={profile.heroPoster || undefined}
-                autoPlay muted loop playsInline
-                preload="auto"
-                disablePictureInPicture
-                aria-label={`${profile.firstName} introducing himself`}
-              >
-                {/* WebM first: it has the alpha channel. Browsers that can't
-                    decode VP9 alpha skip it and take the opaque MP4. */}
-                {profile.heroVideoAlpha && (
-                  <source src={profile.heroVideoAlpha} type="video/webm" />
-                )}
-                <source src={profile.heroVideo} type="video/mp4" />
-              </video>
-            )
+          {/* A looping autoplay clip is motion like any other, so under
+              prefers-reduced-motion the still frame stands in for it. */}
+          {reduced() && profile.heroPoster ? (
+            <img src={profile.heroPoster} alt={`${profile.fullName}, ${profile.title.join(' ')}`} />
           ) : (
-            <>
-              <StandIn />
-              <span className="slot">HERO VIDEO GOES HERE</span>
-            </>
+            <video
+              poster={profile.heroPoster || undefined}
+              autoPlay muted loop playsInline
+              preload="auto"
+              disablePictureInPicture
+              aria-label={`${profile.firstName} introducing himself`}
+            >
+              {/* WebM first: it has the alpha channel. Browsers that can't
+                  decode VP9 alpha skip it and take the opaque MP4. */}
+              {profile.heroVideoAlpha && (
+                <source src={profile.heroVideoAlpha} type="video/webm" />
+              )}
+              <source src={profile.heroVideo} type="video/mp4" />
+            </video>
           )}
         </div>
 

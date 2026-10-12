@@ -1,5 +1,6 @@
 import { profile, about } from '../data.js'
 import { Down, ArrowUR } from './Icons.jsx'
+import { resumeProps } from '../App.jsx'
 
 export default function About() {
   return (
@@ -10,13 +11,7 @@ export default function About() {
           <h2>Hi, I'm <span className="serif">{profile.firstName}.</span></h2>
           {about.bio.map((p, i) => <p key={i}>{p}</p>)}
           <div className="row">
-            <a
-              className={`btn dark ${profile.resumeEnabled ? '' : 'is-off'}`}
-              href={profile.resumeEnabled ? profile.resume : undefined}
-              target="_blank" rel="noreferrer"
-              aria-disabled={profile.resumeEnabled ? undefined : 'true'}
-              tabIndex={profile.resumeEnabled ? undefined : -1}
-            >Résumé <Down /></a>
+            <a {...resumeProps('btn dark')}>Résumé <Down /></a>
             <a className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub <ArrowUR /></a>
             <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn <ArrowUR /></a>
           </div>

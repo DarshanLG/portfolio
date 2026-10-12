@@ -33,7 +33,7 @@ export default function Moments() {
     <section className="section" id="moments" ref={root}>
       <div className="wrap">
         <div className="section-head rv">
-          <span className="label">05 — Achievements</span>
+          <span className="label">06 — Achievements</span>
           <h2>Proud <span className="serif">moments.</span></h2>
         </div>
         <div className="moments">

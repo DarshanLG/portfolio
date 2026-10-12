@@ -4,7 +4,8 @@ import { reduced } from '../App.jsx'
 
 const items = [
   ['about', 'About'], ['skills', 'Skills'], ['work', 'Work'],
-  ['journey', 'Experience'], ['moments', 'Achievements'], ['contact', 'Contact'],
+  ['experience', 'Experience'], ['education', 'Education'],
+  ['moments', 'Achievements'], ['contact', 'Contact'],
 ]
 
 export default function Nav() {

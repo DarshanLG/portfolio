@@ -179,68 +179,161 @@ export const projects = [
   },
 ]
 
-export const journey = [
+// Two timelines, one per section. Keep each in reverse chronological order.
+// `details` is what the Experience dialog shows — the full resume bullets for
+// the role, where the card carries only a one-line summary of them.
+export const experience = [
   {
     kind: 'Work',
     from: '2025', to: 'Now',
+    period: 'March 2025 — Present',
     role: 'Full Stack Developer, Graduate Assistant',
     org: 'California State University, Long Beach',
     where: 'Long Beach, CA',
     text: 'Sole developer on a 10,000-user platform migration at 99.9% stability. Built the PayPal verification pipeline, natural-language search and the RAG chatbot.',
+    details: [
+      'Achieved complete transaction capture on the PayPal NCP vendor migration by architecting a three-layer verification pipeline across PDT, REST API and webhook channels, with SHA256-RSA signature validation, OAuth2 and idempotent handlers covering retry, replay and partial failure on AWS API Gateway and Lambda, with CloudWatch monitoring inbound event delivery.',
+      'Maintained 99.9% stability for 10,000 users as sole developer owning an end-to-end migration of a legacy enterprise platform to PHP 8, making all architecture, data modelling and rollout decisions independently, and remediating security vulnerabilities including SQL injection, XSS and access control gaps.',
+      'Reduced staff record lookup time by 60% by building a natural-language search experience over 62 database tables, designing the query interface, result presentation and empty and loading states on a Python retrieval layer using OpenAI embeddings and ChromaDB.',
+      'Resolved 70% of routine staff inquiries without human intervention by building a retrieval-augmented chatbot on FastAPI and GPT-4, tuning chunking and retrieval strategies and evaluating LLM output correctness and data sensitivity before release.',
+      'Replaced recurring manual financial reporting with a filterable reporting interface backed by SQL aggregation, date range controls and one-click Excel export using SheetJS.',
+      'Established the first knowledge base for the project across 17 Confluence pages and set up JIRA Kanban workflows for tracking work across releases.',
+    ],
     tags: ['PHP 8', 'AWS Lambda', 'FastAPI', 'ChromaDB'],
-  },
-  {
-    kind: 'Education',
-    from: '2025', to: '2026',
-    role: 'MS in Computer Science',
-    org: 'California State University, Long Beach',
-    where: 'GPA 3.7 / 4.0',
-    text: 'Distributed Computing, Artificial Intelligence, Machine Vision, Computer Architecture, Blockchain.',
-    tags: [],
   },
   {
     kind: 'Work',
     from: '2024', to: '2025',
+    period: 'February 2024 — January 2025',
     role: 'Software Developer',
     org: 'Hutech Solutions',
     where: 'Bengaluru · six-person startup',
     text: 'Node and TypeScript middleware at 2,000+ requests per second, RazorPay payments over SNS/SQS at 50,000+ weekly transactions, Kafka and Spark pipelines.',
+    details: [
+      'Sustained over 2,000 requests per second and cut latency 17% by building Node.js and TypeScript middleware with Redis caching against PostgreSQL, writing queries, migrations and schema changes across releases.',
+      'Processed over 50,000 weekly transactions and raised transaction success rate 16% by implementing a RazorPay payment integration with AWS SNS and SQS webhook processing, exponential backoff and idempotent handlers.',
+      'Reduced vulnerability surface 90% by hardening all user-facing endpoints with input validation, XSS protection and parameterised queries.',
+      'Secured user access across the platform by building JWT-based single sign-on and role-based access control for login and authorisation.',
+      'Built and deployed backend microservices exposing GraphQL and REST APIs on Kubernetes, owning service design through release.',
+      'Built real-time data pipelines with Kafka and Spark, and analytics dashboards on React, Django REST and PostgreSQL.',
+      'Increased user engagement 20% for 10,000 monthly active users by building responsive React, Next.js, Redux and Tailwind CSS interfaces from Figma designs, with sortable and filterable data tables and loading and error states, covered by Jest and React Testing Library.',
+      'Cut data retrieval times 40% while handling over 5,000 real-time updates daily by integrating Google Maps location tracking views.',
+    ],
     tags: ['Node.js', 'PostgreSQL', 'Redis', 'Kafka', 'Kubernetes'],
   },
   {
     kind: 'Work',
     from: '2021', to: '2024',
+    period: 'October 2021 — February 2024',
     role: 'Application Developer Analyst',
     org: 'Accenture',
     where: 'Bengaluru · promoted from Associate in 2022',
     text: 'Full stack features on a health insurance platform serving 178M customers. Informatica ETL loading up to 50M rows a run. Jenkins pipelines that cut deploys from 3 hours to 45 minutes.',
+    details: [
+      'Delivered production features across a full stack React and Node.js health insurance platform backed by Oracle, serving 178 million customers for a Fortune 500 client, contributing to design reviews and code reviews alongside 12 engineers in Agile sprints.',
+      'Loaded 1 to 50 million rows per run daily by building Informatica ETL mappings and workflows end to end against Oracle, tuning slow and failing loads and automating job control with Unix shell scripts.',
+      'Cut deployment time 75%, from 3 hours to 45 minutes, by managing automated Jenkins CI/CD release pipelines with unit and integration testing built into the deployment gate.',
+      'Decreased page load times 20% and lifted user retention 5% by refactoring frontend architecture, Redux state management and client-side routing.',
+      'Reduced JS and CSS transfer size 18% over gzip by adding build-time Brotli compression to a MERN asset pipeline.',
+      'Cut new-hire onboarding time 50% by mentoring junior developers through onboarding and pair programming, establishing coding standards, Git workflows and documentation practices.',
+    ],
     tags: ['React', 'Node.js', 'Oracle', 'Informatica', 'Jenkins'],
   },
   {
     kind: 'Work',
     from: '2019', to: '2020',
+    period: 'October 2019 — April 2020',
     role: 'Blockchain Research Associate',
     org: 'IoTracx',
     where: 'Bengaluru',
     text: 'Compared consensus algorithms, smart contracts and network throughput to guide DApp architecture.',
+    details: [
+      'Evaluated scalability and throughput across public and private blockchain networks to inform architecture choices for decentralised applications.',
+      'Researched distributed consensus algorithms, smart contracts and DApp architectures, comparing their tradeoffs in fault tolerance and performance.',
+    ],
+    tags: [],
+  },
+]
+
+export const education = [
+  {
+    kind: 'Education',
+    from: '2025', to: '2026',
+    period: 'January 2025 — December 2026',
+    role: 'MS in Computer Science',
+    org: 'California State University, Long Beach',
+    where: 'GPA 3.7 / 4.0',
+    text: 'Distributed Computing, Artificial Intelligence, Machine Vision, Computer Architecture, Blockchain.',
+    courses: [
+      'Data Structures and Algorithms',
+      'Distributed Computing',
+      'Artificial Intelligence',
+      'Machine Vision',
+      'Computer Architecture',
+      'Blockchain',
+    ],
+    // Drop the PDF in /public and point at it, e.g. './transcript-ms.pdf'.
+    // The download button only appears once this is set.
+    transcript: '',
     tags: [],
   },
   {
     kind: 'Education',
     from: '2017', to: '2021',
+    period: 'August 2017 — August 2021',
     role: 'BE in Computer Science',
     org: 'Visvesvaraya Technological University',
     where: 'Bengaluru',
     text: '',
+    // Add the modules you want to show and this one becomes clickable too.
+    courses: [],
+    transcript: '',
     tags: [],
   },
 ]
 
+// Certification cards. The shape follows what LinkedIn shows for a credential:
+// issuer, when it was issued, when it expires, the credential ID, a link to
+// verify it, and the certificate itself.
+//
+// Only `name`, `org` and `year` are filled in from the resume. Every other
+// field is optional and the card simply leaves it out when empty, so you can
+// add them one at a time:
+//   issued / expires  free text, e.g. 'March 2023'. `year` is the fallback.
+//   credentialId      the ID the issuer printed on it
+//   verify            the issuer's verification URL ('Show credential')
+//   pdf               put the file in /public, e.g. './certs/az-104.pdf'
+//   logo              issuer mark in /public; without one the card draws a
+//                     monogram from `org` instead
 export const certifications = [
-  { name: 'Google Associate Cloud Engineer', org: 'Google Cloud', year: '2023' },
-  { name: 'Google Cloud Digital Leader', org: 'Google Cloud', year: '2023' },
-  { name: 'Azure Administrator Associate (AZ-104)', org: 'Microsoft', year: '2023' },
-  { name: 'Azure Fundamentals (AZ-900)', org: 'Microsoft', year: '2022' },
+  {
+    name: 'Google Associate Cloud Engineer',
+    org: 'Google Cloud',
+    year: '2023',
+    issued: '', expires: '', credentialId: '',
+    verify: '', pdf: '', logo: '',
+  },
+  {
+    name: 'Google Cloud Digital Leader',
+    org: 'Google Cloud',
+    year: '2023',
+    issued: '', expires: '', credentialId: '',
+    verify: '', pdf: '', logo: '',
+  },
+  {
+    name: 'Azure Administrator Associate (AZ-104)',
+    org: 'Microsoft',
+    year: '2023',
+    issued: '', expires: '', credentialId: '',
+    verify: '', pdf: '', logo: '',
+  },
+  {
+    name: 'Azure Fundamentals (AZ-900)',
+    org: 'Microsoft',
+    year: '2022',
+    issued: '', expires: '', credentialId: '',
+    verify: '', pdf: '', logo: '',
+  },
 ]
 
 export const moments = [

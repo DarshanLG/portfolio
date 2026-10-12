@@ -1,12 +1,14 @@
 import { useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { profile } from './data.js'
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
 import About from './components/About.jsx'
 import Skills from './components/Skills.jsx'
 import Work from './components/Work.jsx'
-import Journey from './components/Journey.jsx'
+import Experience from './components/Experience.jsx'
+import Education from './components/Education.jsx'
 import Moments from './components/Moments.jsx'
 import Contact from './components/Contact.jsx'
 
@@ -14,6 +16,22 @@ gsap.registerPlugin(ScrollTrigger)
 
 export const reduced = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Props for a Résumé link, wherever one appears. While profile.resumeEnabled
+// is false the link stays exactly where it is but is inert: no href, nothing to
+// focus, and dimmed by .is-off. `focusable` lets a caller hold it out of the tab
+// order for its own reasons -- the badge's back face does, while turned away.
+export function resumeProps(className = '', focusable = true) {
+  const on = profile.resumeEnabled
+  return {
+    className: `${className}${on ? '' : ' is-off'}`.trim(),
+    href: on ? profile.resume : undefined,
+    target: '_blank',
+    rel: 'noreferrer',
+    'aria-disabled': on ? undefined : 'true',
+    tabIndex: on && focusable ? undefined : -1,
+  }
+}
 
 // Run `fn` once the page is actually on screen, and return a cleanup function.
 //
@@ -106,7 +124,8 @@ export default function App() {
         <About />
         <Skills />
         <Work />
-        <Journey />
+        <Experience />
+        <Education />
         <Moments />
       </main>
       <Contact />

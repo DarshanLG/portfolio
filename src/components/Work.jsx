@@ -1,44 +1,47 @@
-import { useState } from 'react'
-import { projects, profile } from '../data.js'
+import { useCallback, useState } from 'react'
+import { projects } from '../data.js'
 import Cover from './Covers.jsx'
-import { ArrowUR } from './Icons.jsx'
+import ProjectDialog from './ProjectDialog.jsx'
 
+// Project cards, in the same mould as the certification tiles. The whole card
+// opens a dialog with the full write-up.
+//
+// The trigger is a real button inside the heading, stretched over the card by
+// CSS, rather than a click handler on the card itself: that keeps the <h3> a
+// heading for anyone scanning the page, and gives keyboard and screen-reader
+// users the role for free instead of a div pretending to be a button.
 export default function Work() {
-  const [open, setOpen] = useState(0)
+  const [open, setOpen] = useState(null)
+  const close = useCallback(() => setOpen(null), [])
+
   return (
     <section className="section" id="work">
       <div className="wrap">
         <div className="section-head rv">
           <span className="label">03 — Selected work</span>
           <h2>Things I've <span className="serif">built.</span></h2>
+          <p>Four projects. Open one for how it was built and what it does.</p>
         </div>
-        <div className="stack rv">
+
+        <div className="work-grid">
           {projects.map((p, i) => (
-            <article key={p.id} className={`panel ${open === i ? 'open' : ''}`} onClick={() => setOpen(i)}>
-              <button className="spine" aria-expanded={open === i} aria-label={`Open ${p.title}`} onClick={() => setOpen(i)}>
-                <span className="label">{String(i + 1).padStart(2, '0')}</span>
-                <span className="t">{p.title}</span>
-                <span className="plus" aria-hidden="true">+</span>
-              </button>
-              <div className="inner" aria-hidden={open !== i}>
-                <div className="txt">
-                  <span className="label">{String(i + 1).padStart(2, '0')} — {p.kicker}</span>
-                  <h3>{p.title}</h3>
-                  <p className="blurb">{p.blurb}</p>
-                  <ul>{p.points.map((pt) => <li key={pt}>{pt}</li>)}</ul>
-                  <div className="tags">{p.tags.map((t) => <span key={t}>{t}</span>)}</div>
-                  <div className="foot">
-                    <a className="btn dark" href={p.link || profile.github} target="_blank" rel="noreferrer" tabIndex={open === i ? 0 : -1}>
-                      View on GitHub <ArrowUR />
-                    </a>
-                  </div>
-                </div>
-                <div className="cover"><Cover kind={p.cover} /></div>
+            <article className="work-card rv" key={p.id}>
+              <div className="work-cover" aria-hidden="true"><Cover kind={p.cover} /></div>
+              <div className="work-meta">
+                <span className="label">{String(i + 1).padStart(2, '0')} — {p.kicker}</span>
+                <h3>
+                  <button type="button" className="work-open" onClick={() => setOpen(p)}>
+                    {p.title}
+                  </button>
+                </h3>
+                <p>{p.blurb}</p>
               </div>
             </article>
           ))}
         </div>
       </div>
+
+      <ProjectDialog project={open} onClose={close} />
     </section>
   )
 }

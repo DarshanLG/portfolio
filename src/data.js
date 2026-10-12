@@ -39,8 +39,8 @@ export const scene = {
   heads: './scene/scene-heads.webp',  // 3x3 atlas of the head region
   mask: './scene/scene-mask.png',     // where the head patch is pasted
   size: [2752, 1536],
-  box: [0.40298, 0.10417, 0.60283, 0.55859], // head region, image uv
-  face: [0.4999, 0.3126],                    // between the eyes, image uv
+  box: [0.3968, 0.10612, 0.6032, 0.55143], // head region, image uv
+  face: [0.5, 0.3125],                    // between the eyes, image uv
   position: [0.5, 0.42],                     // object-position when cropped
 }
 

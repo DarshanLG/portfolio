@@ -215,10 +215,12 @@ p { margin: 0; }
    on the first A of the background name. It uses `left` rather than a
    transform because GSAP animates this element's transform on load and would
    overwrite one. */
+/* Out of flow on purpose: his size is set by the distance from the letter to
+   the bottom of the hero, not by what the row has room for, and in flow the
+   row would grow to fit him and move the hero's bottom edge in the process. */
 .figure {
-  grid-column: 1; grid-row: 1; position: relative; left: var(--fig-dx, 0px);
+  grid-column: 1; grid-row: 1; position: absolute; left: var(--fig-dx, 0px);
   top: var(--fig-dy, 0px);
-  align-self: end; justify-self: center;
   width: var(--figure-w); height: calc(var(--figure-w) * 1.7778);
   display: grid;
 }
@@ -267,22 +269,32 @@ p { margin: 0; }
 .card-id {
   position: absolute; left: -128px; top: var(--card-top, 140px); width: 256px; border-radius: 18px;
   cursor: grab; touch-action: none; user-select: none;
-  box-shadow: 0 30px 60px -24px rgba(28, 29, 44, .35);
   transform-origin: 50% 0; perspective: 1100px;
-  transition: transform var(--spring-fast) var(--ease-spring), box-shadow var(--spring-fast) var(--ease-spring);
+  transition: transform var(--spring-fast) var(--ease-spring);
 }
 /* Picked up: it lifts toward you the instant it's pressed */
 .card-id.held {
   cursor: grabbing; transform: scale(1.025);
-  box-shadow: 0 42px 70px -26px rgba(28, 29, 44, .45);
   transition-duration: 120ms; transition-timing-function: ease-out;
 }
-.card-3d { position: relative; transform-style: preserve-3d; transition: transform .7s var(--ease-spring); }
-.card-3d.flipped { transform: rotateY(180deg); }
+/* --card-scale is set by Hero.jsx: the card is laid out at 256px and drawn
+   larger, scaled from the clip so it grows downward. It is a transform rather
+   than real sizes so one number resizes the whole card, type and all; the
+   drop shadow therefore lives on the faces, which are what gets scaled. */
+.card-3d {
+  position: relative; transform-style: preserve-3d; transform-origin: 50% 0;
+  transform: scale(var(--card-scale, 1)); transition: transform .7s var(--ease-spring);
+}
+.card-3d.flipped { transform: scale(var(--card-scale, 1)) rotateY(180deg); }
 .card-face {
   border-radius: 18px; overflow: hidden; background: var(--card); border: 1px solid var(--line);
-  box-shadow: 0 2px 0 rgba(255, 255, 255, .6) inset;
+  box-shadow: 0 2px 0 rgba(255, 255, 255, .6) inset, 0 30px 60px -24px rgba(28, 29, 44, .35);
+  transition: box-shadow var(--spring-fast) var(--ease-spring);
   -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+.card-id.held .card-face {
+  box-shadow: 0 2px 0 rgba(255, 255, 255, .6) inset, 0 42px 70px -26px rgba(28, 29, 44, .45);
+  transition-duration: 120ms; transition-timing-function: ease-out;
 }
 /* The front is in flow and gives the card its height; the back lies over it. */
 .card-face.front { position: relative; }
@@ -313,14 +325,15 @@ p { margin: 0; }
 .barcode i { background: var(--ink); display: block; }
 /* Beside the portrait on the card. Both offsets are driven by the same
    variables that position the lanyard, so it travels with the badge instead of
-   needing to be re-tuned whenever that moves. The two constants are the card's
-   own geometry: it is 256px wide and centred on the rig, so +144px clears its
-   right edge; the portrait starts 65px down and is 132px tall, so its middle is
-   131px, less half this label's height to centre the two on each other. */
+   needing to be re-tuned whenever that moves. The constants are the card's
+   own geometry before scaling: it is 256px wide and centred on the rig, so
+   128px (scaled) plus a 16px gap clears its right edge; the portrait starts
+   65px down and is 132px tall, so its middle is 131px (scaled), less half
+   this label's height to centre the two on each other. */
 .badge-hint {
   position: absolute;
-  top: calc(var(--rig-top, 0px) + var(--card-top, 140px) + 117px);
-  left: calc(var(--rig-left, 50%) + 144px);
+  top: calc(var(--rig-top, 0px) + var(--card-top, 140px) + 131px * var(--card-scale, 1) - 14px);
+  left: calc(var(--rig-left, 50%) + 128px * var(--card-scale, 1) + 16px);
   display: grid; gap: 3px; white-space: nowrap; line-height: 1.2;
 }
 
@@ -677,7 +690,7 @@ p { margin: 0; }
      grid-column: 2 or 3 would invent further columns, and the shared
      grid-row: 1 would stack all three on top of each other. */
   .figure, .hero-copy, .badge-stage { grid-column: 1; grid-row: auto; align-self: auto; }
-  .figure { order: -1; width: min(320px, 78vw); height: auto; aspect-ratio: 576 / 1024; left: 0; top: 0; }
+  .figure { order: -1; position: relative; width: min(320px, 78vw); height: auto; aspect-ratio: 576 / 1024; left: 0; top: 0; }
   .badge-stage { height: 520px; }
   .ghost { top: 90px; }
   .tl-item { grid-template-columns: 82px 20px minmax(0, 1fr); gap: 12px; }

@@ -14,6 +14,10 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/darshanlg',
   github: 'https://github.com/naret16', // TODO: confirm which GitHub account to show
   resume: './resume.pdf',
+  // Every Résumé link on the site reads this. While false they still show in
+  // place but are inert -- no href, not focusable, visibly dimmed. Flip it to
+  // true to switch them all back on: hero badge, About and Contact.
+  resumeEnabled: false,
 
   // Drop your files into /public and set these, e.g. './hero.mp4' and './portrait.jpg'
   // hero.webm carries an alpha channel so the giant background name shows

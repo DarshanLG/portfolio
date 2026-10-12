@@ -203,7 +203,13 @@ export default function Badge() {
                   <div className="back-actions">
                     <a className="btn dark" href="#work" tabIndex={flipped ? 0 : -1}>Explore work <Arrow /></a>
                     <a className="btn" href="#contact" tabIndex={flipped ? 0 : -1}>Let's talk</a>
-                    <a className="btn plain" href={profile.resume} target="_blank" rel="noreferrer" tabIndex={flipped ? 0 : -1}>
+                    <a
+                      className={`btn plain ${profile.resumeEnabled ? '' : 'is-off'}`}
+                      href={profile.resumeEnabled ? profile.resume : undefined}
+                      target="_blank" rel="noreferrer"
+                      aria-disabled={profile.resumeEnabled ? undefined : 'true'}
+                      tabIndex={profile.resumeEnabled && flipped ? 0 : -1}
+                    >
                       Résumé <Down />
                     </a>
                   </div>

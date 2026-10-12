@@ -105,6 +105,13 @@ p { margin: 0; }
   .btn:hover .i-out { transform: translate(2px, -2px); }
   .btn:hover .i-down { transform: translateY(2px); }
 }
+/* Temporarily switched off (profile.resumeEnabled). Kept in place so the
+   layout is unchanged, but dimmed and inert -- it has no href, so there is
+   nothing to click, and the hover lift is suppressed so it does not invite one. */
+.is-off { opacity: .4; cursor: not-allowed; }
+@media (hover: hover) { .is-off:hover { transform: none; } }
+.links a.is-off:hover { padding-left: 2px; }
+
 /* Feedback lands on press, not on release */
 .btn:active { transform: scale(.97); transition: transform var(--press); }
 

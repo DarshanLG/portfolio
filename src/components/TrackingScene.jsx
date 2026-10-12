@@ -182,7 +182,9 @@ export default function TrackingScene({ scene, alt, focusEl }) {
 
       const look = [0, 0], vel = [0, 0], tgt = [0, 0]
       let col = 1, row = 1
-      let last = 0, lastMove = -1e9, visible = true, pointer = null
+      let last = 0, visible = true, pointer = null, lastMove = -1e9
+      // Flips the first time a skill is pointed at, and stays on.
+      let engaged = false
       const IDLE = 4000
 
       const tick = (t) => {
@@ -190,11 +192,21 @@ export default function TrackingScene({ scene, alt, focusEl }) {
         if (!alive || !visible) return
         const dt = Math.min((t - (last || t)) / 1000, 1 / 30)
         last = t
+        // He faces straight ahead until the first skill is pointed at. After
+        // that he behaves as he always did -- looking at the focused skill,
+        // otherwise following the cursor, otherwise glancing around. That
+        // wider range is what reaches the up and down poses in the atlas; the
+        // skill cards all sit at about his eye level, so hovering them alone
+        // only ever exercises the middle row.
         const f = focusRef.current
+        if (f) engaged = true
         let idle = false
         if (f && f.isConnected) {
           const fb = f.getBoundingClientRect()
           ;[tgt[0], tgt[1]] = lookFrom(eyes(), fb.left + fb.width / 2, fb.top + fb.height / 2)
+        } else if (!engaged) {
+          tgt[0] = 0
+          tgt[1] = 0
         } else if (pointer && t - lastMove < IDLE) {
           ;[tgt[0], tgt[1]] = lookFrom(eyes(), pointer[0], pointer[1])
         } else {

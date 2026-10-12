@@ -19,7 +19,13 @@ export default function Contact() {
             <div className="mail"><span className="k">Email</span><span id="mail">{profile.email}</span><button className={`copy ${copied ? 'done' : ''}`} onClick={copy} aria-live="polite">{copied ? 'Copied' : 'Copy'}</button></div>
             <a href={profile.linkedin} target="_blank" rel="noreferrer"><span className="k">LinkedIn</span><span>/in/darshanlg</span><ArrowUR /></a>
             <a href={profile.github} target="_blank" rel="noreferrer"><span className="k">GitHub</span><span>{profile.github.replace('https://github.com/', '@')}</span><ArrowUR /></a>
-            <a href={profile.resume} target="_blank" rel="noreferrer"><span className="k">Résumé</span><span>PDF</span><ArrowUR /></a>
+            <a
+              className={profile.resumeEnabled ? undefined : 'is-off'}
+              href={profile.resumeEnabled ? profile.resume : undefined}
+              target="_blank" rel="noreferrer"
+              aria-disabled={profile.resumeEnabled ? undefined : 'true'}
+              tabIndex={profile.resumeEnabled ? undefined : -1}
+            ><span className="k">Résumé</span><span>PDF</span><ArrowUR /></a>
           </div>
         </div>
         <div className="foot-line">

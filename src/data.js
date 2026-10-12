@@ -23,6 +23,21 @@ export const profile = {
   heroVideoAlpha: './hero.webm',
   heroPoster: './hero-poster.png',
   photo: './portrait.jpg',
+
+}
+
+// Skills backdrop: nine renders of Darshan at his desk, one per head pose.
+// Built from docs/scene/head_{row}_{col}.jpg by docs/scene-poses.py, which
+// prints size / box / face. Re-run it and paste the numbers if they change.
+export const scene = {
+  src: './scene/scene.webp',          // neutral pose, full size
+  srcSm: './scene/scene-sm.webp',     // neutral pose, 1280px for phones
+  heads: './scene/scene-heads.webp',  // 3x3 atlas of the head region
+  mask: './scene/scene-mask.png',     // where the head patch is pasted
+  size: [2752, 1536],
+  box: [0.40298, 0.10417, 0.60283, 0.55859], // head region, image uv
+  face: [0.4999, 0.3126],                    // between the eyes, image uv
+  position: [0.5, 0.42],                     // object-position when cropped
 }
 
 export const heroStats = [

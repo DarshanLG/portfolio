@@ -64,16 +64,20 @@ export default function Nav() {
 
   return (
     <header className={`nav ${scrolled ? 'scrolled' : ''}`}>
-      <a className="brand" href="#top" aria-label="Back to top">
-        <span className="mono">{profile.initials}</span>
-        <span className="who">{profile.shortName}</span>
-      </a>
-      <nav className="pill" aria-label="Sections" ref={pill}>
-        <span className="ind" ref={ind} aria-hidden="true" />
-        {items.map(([id, label]) => (
-          <a key={id} href={`#${id}`} className={active === id ? 'on' : ''} aria-current={active === id ? 'true' : undefined}>{label}</a>
-        ))}
-      </nav>
+      {/* The bar spans the window so its scroll blur does, but the contents
+          sit in the same column as every section's content. */}
+      <div className="nav-inner">
+        <a className="brand" href="#top" aria-label="Back to top">
+          <span className="mono">{profile.initials}</span>
+          <span className="who">{profile.shortName}</span>
+        </a>
+        <nav className="pill" aria-label="Sections" ref={pill}>
+          <span className="ind" ref={ind} aria-hidden="true" />
+          {items.map(([id, label]) => (
+            <a key={id} href={`#${id}`} className={active === id ? 'on' : ''} aria-current={active === id ? 'true' : undefined}>{label}</a>
+          ))}
+        </nav>
+      </div>
     </header>
   )
 }

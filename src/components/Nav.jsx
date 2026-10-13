@@ -31,6 +31,22 @@ export default function Nav() {
     return () => { io.disconnect(); window.removeEventListener('scroll', onScroll) }
   }, [])
 
+  // When the links don't all fit (phones), fade whichever edge has more links
+  // past it, so it reads as something that scrolls rather than a cut-off bar.
+  useEffect(() => {
+    const p = pill.current
+    const edges = () => {
+      const max = p.scrollWidth - p.clientWidth
+      p.classList.toggle('more-l', max > 1 && p.scrollLeft > 1)
+      p.classList.toggle('more-r', max > 1 && p.scrollLeft < max - 1)
+    }
+    edges()
+    p.addEventListener('scroll', edges, { passive: true })
+    const ro = new ResizeObserver(edges)
+    ro.observe(p)
+    return () => { p.removeEventListener('scroll', edges); ro.disconnect() }
+  }, [])
+
   // Move the shared indicator under the active link. Layout effect so it is
   // placed in the same frame the link changes colour, with no flash in between.
   useLayoutEffect(() => {

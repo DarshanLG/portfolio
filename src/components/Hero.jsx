@@ -18,6 +18,9 @@ const A_CAVITY = 0.375
 const STRAP = 104       // lanyard between the letter and the top of the card
 const CARD_SCALE = 1.15 // how much larger than its 256px layout the card is drawn
 const CARD_MIN = 0.85   // ...and how far it may shrink to stay above his soles
+const CARD_FULL_AT = 1280 // window width below which the card scales down with it
+const COPY_GAP = 20     // space kept between the title copy and the card
+const HINT_W = 110      // room the "drag it / tap to flip" label needs beside the card
 
 export default function Hero() {
   const root = useRef(null)
@@ -39,7 +42,15 @@ export default function Hero() {
     const stage = hero.querySelector('.badge-stage')
     const narrow = window.matchMedia('(max-width: 860px)')
 
+    const copy = hero.querySelector('.hero-copy')
+    const title = copy?.querySelector('h1')
+
     const place = () => {
+      // Start from the stylesheet's sizes each time, so a fit worked out at
+      // one width never sticks after the window grows again.
+      title?.style.removeProperty('font-size')
+      copy?.style.removeProperty('max-width')
+      hero.classList.remove('hint-up')
       // Stacked layout: the name sits elsewhere, so let the stylesheet decide.
       if (narrow.matches) {
         hero.style.removeProperty('--fig-dx')
@@ -125,9 +136,34 @@ export default function Hero() {
         hero.style.setProperty('--card-top', `${STRAP}px`)
         const cardFace = stage.querySelector('.card-face.front')
         const cardH = cardFace ? cardFace.offsetHeight : 378
-        let scale = CARD_SCALE
-        if (soles !== null) scale = Math.min(CARD_SCALE, (soles - headTop - STRAP) / cardH)
-        hero.style.setProperty('--card-scale', Math.max(CARD_MIN, scale).toFixed(3))
+        // On narrower windows the card also scales with the width, otherwise
+        // at 1.15x it is wider than its column and runs into the title.
+        let scale = CARD_SCALE * Math.min(1, hBox.width / CARD_FULL_AT)
+        if (soles !== null) scale = Math.min(scale, (soles - headTop - STRAP) / cardH)
+        scale = Math.max(CARD_MIN, scale)
+        hero.style.setProperty('--card-scale', scale.toFixed(3))
+
+        // The card's position is fixed by the letter, so the copy gives way
+        // instead: the tagline wraps inside the room left of the card, and the
+        // title shrinks just enough that "Engineer." clears it.
+        const cardLeft = secondA - 128 * scale - COPY_GAP
+        if (copy && title) {
+          const cb = copy.getBoundingClientRect()
+          const room = cardLeft - cb.left
+          if (room > 0 && room < cb.width) {
+            copy.style.maxWidth = `${room.toFixed(1)}px`
+            const r = document.createRange()
+            r.selectNodeContents(title)
+            const textW = Math.max(...[...r.getClientRects()].map((x) => x.right)) - cb.left
+            if (textW > room) {
+              const size = parseFloat(getComputedStyle(title).fontSize)
+              title.style.fontSize = `${(size * room / textW).toFixed(1)}px`
+            }
+          }
+        }
+        // Not enough room right of the card for the hint: it moves up beside
+        // the lanyard instead of running off the edge.
+        if (secondA + 128 * scale + 16 + HINT_W > hBox.right) hero.classList.add('hint-up')
       }
     }
 

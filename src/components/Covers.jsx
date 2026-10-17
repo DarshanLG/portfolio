@@ -51,24 +51,34 @@ function Vla() {
   )
 }
 
-function Search() {
+function Dermai() {
+  // an 8×8 confusion matrix: navy diagonal, faint off-diagonal noise, melanoma lit
+  const classes = ['MEL', 'NV', 'BCC', 'AK', 'BKL', 'DF', 'VASC', 'SCC']
+  const noise = new Set(['0-1', '1-0', '1-4', '4-1', '2-3', '3-2', '7-2', '2-7', '4-0', '5-1'])
+  const x0 = 138, y0 = 66, step = 21, size = 17
   return (
-    <svg viewBox="0 0 440 340" fill="none" fontFamily="Geist, sans-serif">
-      <rect x="24" y="26" width="392" height="44" rx="22" fill={card} stroke={line} />
-      <circle cx="50" cy="48" r="7" stroke={soft} strokeWidth="2" /><path d="M55 53l5 5" stroke={soft} strokeWidth="2" />
-      <text x="68" y="52" fontSize="12" fill={ink}>who approved travel for the physics dept in May?</text>
-      {[0, 1, 2].map((i) => (
-        <g key={i} transform={`translate(24 ${88 + i * 42})`}>
-          <rect width="392" height="34" rx="10" fill={i === 0 ? navy : card} stroke={i === 0 ? navy : line} />
-          <rect x="14" y="13" width={150 - i * 26} height="8" rx="4" fill={i === 0 ? '#c4c5da' : line} />
-          <text x="378" y="21" textAnchor="end" fontSize="10" fontFamily="Geist Mono, monospace" fill={i === 0 ? card : soft}>{(0.94 - i * 0.07).toFixed(2)}</text>
+    <svg viewBox="0 0 440 340" fill="none">
+      <rect x="20" y="20" width="400" height="230" rx="14" fill={card} stroke={line} />
+      <text x="40" y="48" fontFamily="Geist Mono, monospace" fontSize="10" fill={soft}>CONFUSION MATRIX · VIT + GAN</text>
+      {classes.map((c, r) => (
+        <g key={c}>
+          <text x={x0 - 8} y={y0 + r * step + 12} textAnchor="end" fontFamily="Geist Mono, monospace" fontSize="8" fill={soft}>{c}</text>
+          {classes.map((_, col) => (
+            <rect
+              key={col} x={x0 + col * step} y={y0 + r * step} width={size} height={size} rx="4"
+              fill={r === col ? (r === 0 ? acc : navy) : noise.has(`${r}-${col}`) ? '#e6e3d9' : '#f1efe8'}
+            />
+          ))}
         </g>
       ))}
-      <rect x="160" y="226" width="256" height="40" rx="14" fill={card} stroke={line} />
-      <rect x="176" y="238" width="180" height="6" rx="3" fill={line} /><rect x="176" y="250" width="120" height="6" rx="3" fill={line} />
-      <rect x="24" y="276" width="220" height="40" rx="14" fill={navy} />
-      <rect x="40" y="288" width="150" height="6" rx="3" fill="#c4c5da" /><rect x="40" y="300" width="96" height="6" rx="3" fill="#c4c5da" />
-      <text x="410" y="306" textAnchor="end" fontSize="10" fontFamily="Geist Mono, monospace" fill={soft}>62 TABLES</text>
+      <g fontFamily="Geist, sans-serif">
+        <rect x="20" y="266" width="196" height="56" rx="12" fill={navy} />
+        <text x="36" y="292" fontSize="22" fontWeight="700" fill={card}>84%</text>
+        <text x="36" y="310" fontSize="10" fill="#c4c5da">melanoma recall</text>
+        <rect x="224" y="266" width="196" height="56" rx="12" fill={card} stroke={line} />
+        <text x="240" y="292" fontSize="22" fontWeight="700" fill={ink}>+9 pts</text>
+        <text x="240" y="310" fontSize="10" fill={soft}>F1 on rarest class, GAN images</text>
+      </g>
     </svg>
   )
 }
@@ -112,5 +122,5 @@ function Lander() {
 }
 
 export default function Cover({ kind }) {
-  return { llm: <Llm />, vla: <Vla />, search: <Search />, lander: <Lander /> }[kind] ?? null
+  return { llm: <Llm />, vla: <Vla />, dermai: <Dermai />, lander: <Lander /> }[kind] ?? null
 }

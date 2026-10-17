@@ -147,6 +147,31 @@ export const projects = [
     cover: 'lander',
   },
   {
+    id: 'dermai',
+    kicker: 'Deep learning · Medical imaging',
+    title: 'Skin cancer screening',
+    blurb: 'Classifies dermoscopy photos into 8 skin-lesion types, comparing a CNN, EfficientNet and a Vision Transformer, with GAN-made images for rare cancers.',
+    about: 'A deep-learning pipeline that sorts dermoscopy images from the ISIC 2019 dataset (25,331 images, 8 lesion types) to help with early melanoma screening. It compares a custom CNN, a fine-tuned EfficientNet-B3 and a fine-tuned ViT-Base/16 under the same training and evaluation setup, uses StyleGAN2-ADA to create extra images of the rarest cancers, and shows where each model is looking with Grad-CAM and attention maps.',
+    points: [
+      'Three architectures trained under one protocol: the same splits, augmentation, 5-fold cross-validation and metrics, so the comparison is fair',
+      'ViT-Base/16 scored the highest F1 in all 8 classes; EfficientNet-B3 came a close second and both far outperformed the CNN baseline, most of all on rare classes',
+      'StyleGAN2-ADA synthetic images for the 4 smallest classes raised F1 on every one of them (up to +9 points on dermatofibroma)',
+      'Leakage-free data: patient-level splits plus perceptual-hash deduplication, with a held-out test set that augmentation never touches',
+      'Class imbalance handled three ways: GAN augmentation, focal loss / class weighting, and weighted sampling',
+      'Best model (ViT + GAN) reaches 84% recall on melanoma and 78–93% recall across all 8 classes',
+      'CECS 551 term project, CSULB, Spring 2026',
+    ],
+    tags: ['PyTorch', 'timm', 'Vision Transformer', 'EfficientNet', 'StyleGAN2-ADA', 'Grad-CAM'],
+    link: 'https://github.com/DarshanLG/DermAI',
+    media: {
+      src: 'https://raw.githubusercontent.com/DarshanLG/DermAI/main/results/report_figures/fig_per_class_f1.png',
+      width: 749, height: 441,
+      alt: 'Per-class F1 for the custom CNN, EfficientNet-B3 and ViT-Base/16 on the ISIC 2019 test set',
+      caption: 'Per-class F1 on the held-out test set, mean of 5 folds.',
+    },
+    cover: 'dermai',
+  },
+  {
     id: 'llm',
     kicker: 'Deep learning · Systems',
     title: 'Transformer from scratch',
@@ -173,20 +198,6 @@ export const projects = [
     tags: ['SmolVLM-2B', 'LoRA', 'React', 'Express'],
     link: '',
     cover: 'vla',
-  },
-  {
-    id: 'search',
-    kicker: 'CSULB · Search + RAG',
-    title: 'Ask-the-database',
-    blurb: 'Natural-language search over 62 tables and a chatbot that answers routine staff questions.',
-    points: [
-      'Staff record lookups 60% faster with embedding search over ChromaDB',
-      'RAG chatbot on FastAPI + GPT-4 resolves 70% of routine inquiries',
-      'Output correctness and data-sensitivity checks before release',
-    ],
-    tags: ['OpenAI', 'ChromaDB', 'FastAPI', 'GPT-4'],
-    link: '',
-    cover: 'search',
   },
 ]
 

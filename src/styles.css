@@ -519,6 +519,10 @@ p { margin: 0; }
   aspect-ratio: 16 / 11; display: grid; place-items: center;
 }
 .dlg-cover svg { width: 100%; height: 100%; }
+.dlg-media { margin: 0; display: grid; gap: 8px; }
+.dlg-media img { display: block; width: 100%; height: auto; border-radius: 14px; background: var(--paper-2); }
+.dlg-media figcaption { color: var(--ink-3); font-size: .8125rem; }
+.dlg-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .dlg-lead { color: var(--ink); font-size: 1rem; line-height: 1.5; }
 
 

@@ -12,7 +12,7 @@ export const profile = {
   location: 'Long Beach, CA',
   email: 'darshanlg.usa@gmail.com',
   linkedin: 'https://www.linkedin.com/in/darshanlg',
-  github: 'https://github.com/naret16', // TODO: confirm which GitHub account to show
+  github: 'https://github.com/DarshanLG',
   resume: './resume.pdf',
   // Every Résumé link on the site reads this. While false they still show in
   // place but are inert -- no href, not focusable, visibly dimmed. Flip it to
@@ -122,6 +122,31 @@ export const skills = [
 
 export const projects = [
   {
+    id: 'lander',
+    kicker: 'Reinforcement learning · Research',
+    title: 'Rocket landing with RL',
+    blurb: 'A rocket that learns to land itself, with PPO written from scratch and a live browser demo you can fly in a storm.',
+    // The dialog leads with `about` when set, and falls back to `blurb`.
+    about: "A reinforcement-learning agent that lands a rocket in Gymnasium's Lunar Lander. I wrote PPO from scratch in PyTorch, ran a 27-agent study on reward design and robustness, and ported the physics to JavaScript so the trained agents fly live in the browser.",
+    points: [
+      'PPO implemented from scratch (GAE, clipping, vectorized rollouts, normalization), matching Stable-Baselines3: 273 vs 276 score, both landing 100% of the time',
+      'Found that textbook potential-based reward shaping makes the agent crash every time, traced it to two terminal-state effects, and fixed it (back to 100% landings)',
+      'Domain randomization (random gravity, wind, turbulence) cut crashes in wind from 36% to 11%',
+      'Trained networks run unchanged in a JavaScript physics port (planck.js): same behaviour, no backend',
+      '27 agents, 3 seeds each, scored on 100 held-out episodes per agent; 14 pytest tests',
+    ],
+    tags: ['PyTorch', 'PPO', 'Gymnasium', 'Box2D', 'planck.js', 'GitHub Pages'],
+    link: 'https://github.com/DarshanLG/astro-lander',
+    demo: 'https://darshanlg.github.io/astro-lander/web/',
+    media: {
+      src: 'https://raw.githubusercontent.com/DarshanLG/astro-lander/main/results/landing_storm_robust.gif',
+      width: 600, height: 400,
+      alt: 'Domain-randomized agent landing on the pad in a storm (wind 18)',
+      caption: 'Robust agent landing in a storm. Trained in random weather.',
+    },
+    cover: 'lander',
+  },
+  {
     id: 'llm',
     kicker: 'Deep learning · Systems',
     title: 'Transformer from scratch',
@@ -162,20 +187,6 @@ export const projects = [
     tags: ['OpenAI', 'ChromaDB', 'FastAPI', 'GPT-4'],
     link: '',
     cover: 'search',
-  },
-  {
-    id: 'pay',
-    kicker: 'CSULB · Payments',
-    title: 'Payment verification pipeline',
-    blurb: 'Complete transaction capture during a PayPal vendor migration, with nothing dropped or double-counted.',
-    points: [
-      'Three verification layers: PDT, REST API and webhooks',
-      'SHA256-RSA signature checks, OAuth2, idempotent replay-safe handlers',
-      'API Gateway + Lambda, with CloudWatch watching event delivery',
-    ],
-    tags: ['AWS Lambda', 'API Gateway', 'OAuth2', 'CloudWatch'],
-    link: '',
-    cover: 'pay',
   },
 ]
 

@@ -73,29 +73,44 @@ function Search() {
   )
 }
 
-function Pay() {
-  const lanes = ['PDT', 'REST API', 'WEBHOOK']
+function Lander() {
+  // a dashed descent trajectory onto a flagged pad, lander resting on it
   return (
-    <svg viewBox="0 0 440 340" fill="none" fontFamily="Geist Mono, monospace">
-      {lanes.map((l, i) => {
-        const y = 70 + i * 90
-        return (
-          <g key={l}>
-            <rect x="24" y={y - 22} width="110" height="44" rx="12" fill={card} stroke={line} />
-            <text x="79" y={y + 4} textAnchor="middle" fontSize="11" fill={ink}>{l}</text>
-            <path d={`M134 ${y} C 210 ${y}, 220 160, 290 160`} stroke={i === 1 ? acc : navy} strokeWidth="2" strokeDasharray={i === 1 ? '0' : '5 5'} />
+    <svg viewBox="0 0 440 340" fill="none">
+      <rect x="20" y="20" width="400" height="230" rx="14" fill={card} stroke={line} />
+      <text x="40" y="48" fontFamily="Geist Mono, monospace" fontSize="10" fill={soft}>LANDING TRAJECTORY · WIND 18</text>
+      {[0, 1, 2].map((i) => (
+        <line key={i} x1={330 + i * 8} x2={384 + i * 8} y1={70 + i * 14} y2={70 + i * 14} stroke={line} strokeWidth="2" strokeLinecap="round" />
+      ))}
+      <line x1="40" x2="400" y1="226" y2="226" stroke={line} />
+      <path d="M52 72 C 130 70, 214 100, 230 166" stroke={navy} strokeWidth="2" strokeDasharray="5 6" strokeLinecap="round" />
+      <g transform="translate(230 226) scale(1.5) translate(-230 -226)">
+        <rect x="194" y="222" width="72" height="4" rx="2" fill={navy} />
+        {[196, 264].map((x) => (
+          <g key={x}>
+            <line x1={x} x2={x} y1="222" y2="198" stroke={navy} strokeWidth="1.2" />
+            <path d={`M${x} 198 l10 4 -10 4z`} fill={navy} />
           </g>
-        )
-      })}
-      <rect x="290" y="112" width="126" height="96" rx="16" fill={navy} />
-      <text x="353" y="148" textAnchor="middle" fontSize="10" fill="#c4c5da">VERIFY</text>
-      <text x="353" y="168" textAnchor="middle" fontSize="10" fill="#c4c5da">SHA256-RSA</text>
-      <text x="353" y="190" textAnchor="middle" fontSize="13" fontFamily="Geist, sans-serif" fontWeight="700" fill={card}>idempotent ✓</text>
-      <text x="353" y="244" textAnchor="middle" fontSize="10" fill={soft}>0 DROPPED · 0 DUPES</text>
+        ))}
+        <g stroke={navy} strokeWidth="2" strokeLinecap="round">
+          <line x1="222" y1="210" x2="214" y2="222" />
+          <line x1="238" y1="210" x2="246" y2="222" />
+        </g>
+        <path d="M224 192 h12 l5 18 h-22z" fill={navy} />
+        <circle cx="230" cy="214" r="3.5" fill={acc} />
+      </g>
+      <g fontFamily="Geist, sans-serif">
+        <rect x="20" y="266" width="196" height="56" rx="12" fill={navy} />
+        <text x="36" y="292" fontSize="22" fontWeight="700" fill={card}>3.3×</text>
+        <text x="36" y="310" fontSize="10" fill="#c4c5da">fewer crashes in wind</text>
+        <rect x="224" y="266" width="196" height="56" rx="12" fill={card} stroke={line} />
+        <text x="240" y="292" fontSize="22" fontWeight="700" fill={ink}>100%</text>
+        <text x="240" y="310" fontSize="10" fill={soft}>landings, PPO from scratch</text>
+      </g>
     </svg>
   )
 }
 
 export default function Cover({ kind }) {
-  return { llm: <Llm />, vla: <Vla />, search: <Search />, pay: <Pay /> }[kind] ?? null
+  return { llm: <Llm />, vla: <Vla />, search: <Search />, lander: <Lander /> }[kind] ?? null
 }

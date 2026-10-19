@@ -240,7 +240,13 @@ p { margin: 0; }
 /* An explicit height on .figure is what makes height: 100% resolve here --
    against an auto-sized grid row it does not, and the clip silently falls back
    to its intrinsic size. */
-.figure video, .figure img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
+.figure video, .figure img, .figure canvas { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
+/* Alpha mode (see Hero.jsx): the <video> plays the stacked colour+mask clip
+   unseen and a WebGL canvas on top paints the cut-out. Until its first frame
+   is drawn, the transparent poster stands in as the figure's background. */
+.figure.alpha > * { grid-area: 1 / 1; }
+.figure.alpha video { opacity: 0; }
+.figure.alpha:not(.live) { background: var(--poster) bottom / contain no-repeat; }
 /* The hero's third column is intentionally empty: its buttons and stats now
    live on the back of the ID badge in About. The track stays so the video and
    copy keep the positions they had. */

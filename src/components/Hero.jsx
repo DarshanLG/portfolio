@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { profile } from '../data.js'
 import Badge from './Badge.jsx'
@@ -21,6 +21,109 @@ const CARD_MIN = 0.85   // ...and how far it may shrink to stay above his soles
 const CARD_FULL_AT = 1280 // window width below which the card scales down with it
 const COPY_GAP = 20     // space kept between the title copy and the card
 const HINT_W = 110      // room the "drag it / tap to flip" label needs beside the card
+
+// The looping clip, with real transparency in every browser. hero-alpha.mp4
+// stacks the colour frame over its mask; the <video> plays it unseen and each
+// new frame is composited in WebGL onto a canvas laid over it. The <video>
+// keeps its box, so place() below measures it exactly as before. Without
+// WebGL (or if the context is lost) it falls back to the opaque MP4.
+const VERT = `attribute vec2 p; varying vec2 v;
+void main() { v = vec2(p.x * .5 + .5, .5 - p.y * .5); gl_Position = vec4(p, 0., 1.); }`
+const FRAG = `precision mediump float; varying vec2 v; uniform sampler2D t;
+void main() {
+  vec3 c = texture2D(t, vec2(v.x, v.y * .5)).rgb;
+  float a = texture2D(t, vec2(v.x, v.y * .5 + .5)).r;
+  gl_FragColor = vec4(c * a, a);
+}`
+
+function canComposite() {
+  try {
+    return !!document.createElement('canvas').getContext('webgl')
+  } catch { return false }
+}
+
+function HeroClip() {
+  const [alpha, setAlpha] = useState(() => !!profile.heroVideoAlpha && canComposite())
+  const video = useRef(null)
+  const canvas = useRef(null)
+
+  useEffect(() => {
+    if (!alpha) return
+    const vid = video.current, cv = canvas.current
+    const figure = cv.parentElement
+    const gl = cv.getContext('webgl', { premultipliedAlpha: true, antialias: false })
+    if (!gl) { setAlpha(false); return }
+
+    const shader = (type, src) => {
+      const s = gl.createShader(type)
+      gl.shaderSource(s, src)
+      gl.compileShader(s)
+      return s
+    }
+    const prog = gl.createProgram()
+    gl.attachShader(prog, shader(gl.VERTEX_SHADER, VERT))
+    gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, FRAG))
+    gl.linkProgram(prog)
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { setAlpha(false); return }
+    gl.useProgram(prog)
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW)
+    const loc = gl.getAttribLocation(prog, 'p')
+    gl.enableVertexAttribArray(loc)
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+
+    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture())
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.viewport(0, 0, cv.width, cv.height)
+
+    // Upload only when the clip has moved on, so a paused or stalled video
+    // costs nothing per frame.
+    let raf, last = -1
+    const draw = () => {
+      raf = requestAnimationFrame(draw)
+      if (vid.readyState < 2 || vid.currentTime === last) return
+      last = vid.currentTime
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, vid)
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+      figure.classList.add('live')
+    }
+    raf = requestAnimationFrame(draw)
+    vid.play?.()?.catch(() => {})
+
+    const lost = (e) => { e.preventDefault(); setAlpha(false) }
+    cv.addEventListener('webglcontextlost', lost)
+    return () => {
+      cancelAnimationFrame(raf)
+      cv.removeEventListener('webglcontextlost', lost)
+      figure.classList.remove('live')
+    }
+  }, [alpha])
+
+  useEffect(() => {
+    const fig = video.current?.parentElement
+    fig?.classList.toggle('alpha', alpha)
+    if (alpha && profile.heroPoster) fig?.style.setProperty('--poster', `url("${profile.heroPoster}")`)
+  }, [alpha])
+
+  return (
+    <>
+      <video
+        ref={video}
+        src={alpha ? profile.heroVideoAlpha : profile.heroVideo}
+        poster={alpha ? undefined : profile.heroPoster || undefined}
+        autoPlay muted loop playsInline
+        preload="auto"
+        disablePictureInPicture
+        aria-label={`${profile.firstName} waving hello`}
+      />
+      {alpha && <canvas ref={canvas} width={576} height={1024} aria-hidden="true" />}
+    </>
+  )
+}
 
 export default function Hero() {
   const root = useRef(null)
@@ -231,20 +334,7 @@ export default function Hero() {
           {reduced() && profile.heroPoster ? (
             <img src={profile.heroPoster} alt={`${profile.fullName}, ${profile.title.join(' ')}`} />
           ) : (
-            <video
-              poster={profile.heroPoster || undefined}
-              autoPlay muted loop playsInline
-              preload="auto"
-              disablePictureInPicture
-              aria-label={`${profile.firstName} waving hello`}
-            >
-              {/* WebM first: it has the alpha channel. Browsers that can't
-                  decode VP9 alpha skip it and take the opaque MP4. */}
-              {profile.heroVideoAlpha && (
-                <source src={profile.heroVideoAlpha} type="video/webm" />
-              )}
-              <source src={profile.heroVideo} type="video/mp4" />
-            </video>
+            <HeroClip />
           )}
         </div>
 

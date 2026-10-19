@@ -23,7 +23,7 @@ export default function Work() {
         </div>
 
         <div className="work-grid">
-          {projects.map((p) => (
+          {projects.filter((p) => !p.hidden).map((p) => (
             <article className="work-card rv" key={p.id}>
               <div className="work-cover" aria-hidden="true"><Cover kind={p.cover} /></div>
               <div className="work-meta">

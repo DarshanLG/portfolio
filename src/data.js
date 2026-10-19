@@ -25,11 +25,14 @@ export const profile = {
   resumeEnabled: true,
 
   // Drop your files into /public and set these, e.g. './hero/hero.mp4' and './profile/portrait.jpg'
-  // hero.webm carries an alpha channel so the giant background name shows
-  // through around the figure; hero.mp4 is the fallback for browsers that
-  // can't decode VP9 alpha (notably Safari), where the backdrop stays opaque.
+  // hero-alpha.mp4 is a plain H.264 clip twice as tall as the figure: colour
+  // on top, the cut-out mask (white = him) below. Hero.jsx composites the two
+  // in WebGL so the giant background name shows through around him in every
+  // browser -- VP9-alpha WebM only works in Chrome-family browsers and Firefox,
+  // and Safari/Opera drew it as a solid block. hero.mp4 (opaque, on --paper)
+  // is the fallback when WebGL isn't available.
   heroVideo: './hero/hero.mp4',
-  heroVideoAlpha: './hero/hero.webm',
+  heroVideoAlpha: './hero/hero-alpha.mp4',
   heroPoster: './hero/hero-poster.png',
   photo: './profile/portrait.jpg',
 
@@ -180,6 +183,8 @@ export const projects = [
     id: 'llm',
     kicker: 'Deep learning · Systems',
     title: 'Transformer from scratch',
+    // Hidden for now; delete this line to show it again.
+    hidden: true,
     blurb: 'A 124M-parameter decoder-only language model, trained and served without a framework doing the hard parts.',
     points: [
       'Trained on 2.4B tokens across two A100s with DDP, bf16 and gradient checkpointing',

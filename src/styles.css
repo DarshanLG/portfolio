@@ -2,7 +2,7 @@
    Deliberately one light theme to match the reference design. */
 :root {
   /* --paper is sampled from the hero video's background (#e8e4da, the modal
-     colour over the whole clip) so the figure sits on the page with no visible
+     color over the whole clip) so the figure sits on the page with no visible
      seam. The rest of the neutral ramp is offset from it by the same amounts it
      had against the original warmer paper, which keeps every hover, border and
      card at the contrast it was designed with. Re-sample and shift all six
@@ -17,6 +17,12 @@
   --navy: #262a48;
   --ghost: #d9d4c6;
   --accent: #4c4fc0;
+  /* Ink on the navy contact block: body copy, labels, hairlines. */
+  --on-navy: #c4c5da;
+  --on-navy-2: #a9abc4;
+  --on-navy-line: rgba(241, 239, 232, .18);
+  /* Lift for an interactive card under the pointer. */
+  --lift-shadow: 0 18px 34px -22px rgba(28, 29, 44, .45);
 
   /* Hero figure size. Height follows the clip's 9:16 ratio (1024/576). The
      figure is wider than its grid column on purpose -- it is a cut-out, so it
@@ -41,6 +47,9 @@
   --spring: .59s;
   /* press feedback: short and decelerating, so it lands on the same frame as the press */
   --press: 100ms ease-out;
+  /* The spring's mirror image, for things leaving along the path they came in
+     on: it accelerates away where the spring decelerated in. */
+  --ease-exit: cubic-bezier(.9, 0, .7, .3);
   color-scheme: light;
 }
 @supports (transition-timing-function: linear(0, 1)) {
@@ -169,6 +178,7 @@ p { margin: 0; }
   text-decoration: none; color: var(--ink-2); white-space: nowrap; transition: color .25s;
 }
 @media (hover: hover) { .pill a:hover { color: var(--ink); } }
+.pill a:active { opacity: .6; transition: opacity var(--press); }
 .pill a.on { color: var(--paper); }
 /* The active marker is one element that springs from the old section to the
    new one, so you can see where you came from. Nav.jsx sets its x and width. */
@@ -329,10 +339,10 @@ p { margin: 0; }
 /* Beside the portrait on the card. Both offsets are driven by the same
    variables that position the lanyard, so it travels with the badge instead of
    needing to be re-tuned whenever that moves. The constants are the card's
-   own geometry before scaling: it is 256px wide and centred on the rig, so
+   own geometry before scaling: it is 256px wide and centered on the rig, so
    128px (scaled) plus a 16px gap clears its right edge; the portrait starts
    65px down and is 132px tall, so its middle is 131px (scaled), less half
-   this label's height to centre the two on each other. */
+   this label's height to center the two on each other. */
 .badge-hint {
   position: absolute;
   top: calc(var(--rig-top, 0px) + var(--card-top, 140px) + 131px * var(--card-scale, 1) - 14px);
@@ -340,62 +350,23 @@ p { margin: 0; }
   display: grid; gap: 3px; white-space: nowrap; line-height: 1.2;
 }
 /* No room right of the card (narrower windows, and the stacked phone layout):
-   the hint sits beside the lanyard instead, centred on the strap, far enough
+   the hint sits beside the lanyard instead, centered on the strap, far enough
    out that the strap clears it as the card swings. */
 .hint-up .badge-hint {
   top: calc(var(--rig-top, 0px) + (var(--card-top, 140px) - 16px) / 2 - 14px);
   left: calc(var(--rig-left, 50%) + 32px);
 }
 
-/* ── skills: periodic table ──────────────── */
-.fam-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 26px; }
-.chip {
-  display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px; border-radius: 999px; font-size: .8125rem;
-  border: 1px solid var(--line); background: var(--card); cursor: pointer; color: var(--ink-2);
-  transition: transform var(--spring-fast) var(--ease-spring), background-color .2s, color .2s, border-color .2s;
-}
-@media (hover: hover) { .chip:not(.on):hover { border-color: var(--ink-3); color: var(--ink); } }
-.chip:active { transform: scale(.96); transition: transform var(--press); }
-.chip i { width: 9px; height: 9px; border-radius: 3px; display: block; }
-.chip.on { background: var(--navy); color: var(--paper); border-color: var(--navy); }
-.table-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; align-items: start; }
-.ptable { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 7px; }
-.el {
-  aspect-ratio: 1 / 1.08; border-radius: 10px; padding: 7px 8px; display: grid; grid-template-rows: auto 1fr auto;
-  cursor: pointer; border: 0; text-align: left;
-  transition: transform var(--spring-fast) var(--ease-spring), box-shadow var(--spring-fast) var(--ease-spring), opacity .3s, filter .3s;
-  background: var(--c); color: var(--t);
-}
-.el small { font-family: var(--f-mono); font-size: .5938rem; opacity: .7; }
-.el b { font-size: clamp(1.25rem, 2.2vw, 1.75rem); font-weight: 700; letter-spacing: -.03em; align-self: center; }
-.el span { font-size: .5938rem; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.el.on { transform: translateY(-4px) scale(1.04); box-shadow: 0 14px 26px -12px rgba(28,29,44,.45); }
-@media (hover: hover) { .el:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 14px 26px -12px rgba(28,29,44,.45); } }
-.el:active { transform: translateY(-1px) scale(.98); transition: transform var(--press); }
-.el.dim { opacity: .22; filter: saturate(.3); }
+/* ── skills ─────────────────────────────── */
+/* Family colors, used by each skill's badge and the readout tile. */
 .f-lang { --c: #232743; --t: #f1efe8; }
 .f-fe   { --c: #3b4066; --t: #f1efe8; }
 .f-be   { --c: #6b6676; --t: #f6f4ee; }
 .f-data { --c: #9a8f86; --t: #fbfaf6; }
 .f-ai   { --c: #b3a6b0; --t: #1c1d2c; }
 .f-ops  { --c: #d3cdbd; --t: #1c1d2c; }
-.detail {
-  position: sticky; top: 100px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px;
-  display: grid; gap: 14px; min-height: 280px;
-}
-.detail .big {
-  width: 110px; height: 118px; border-radius: 14px; background: var(--c); color: var(--t); padding: 10px 12px;
-  display: grid; grid-template-rows: auto 1fr;
-}
-.detail .big small { font-family: var(--f-mono); font-size: .6875rem; opacity: .7; }
-.detail .big b { font-size: 2.875rem; font-weight: 700; letter-spacing: -.04em; align-self: end; line-height: 1; }
-.detail h3 { font-size: 1.5rem; letter-spacing: -.02em; }
-.detail p { color: var(--ink-2); font-size: .875rem; }
 
 /* ── skills: desk scene ──────────────────── */
-.fam-sep { width: 1px; align-self: stretch; background: var(--line); margin-inline: 6px; }
-
-.skills .fam-row { margin-bottom: clamp(22px, 3vw, 34px); }
 /* min-height, not height: at narrow desktop widths the side columns wrap onto
    more lines than the scene is tall, so the UI stays in flow and the scene
    grows with it rather than clipping the last family. */
@@ -419,7 +390,7 @@ p { margin: 0; }
   backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
   box-shadow: 0 18px 40px -24px rgba(28, 29, 44, .45);
 }
-/* Vibrancy: small text over a blurred photo needs more than flat grey to stay
+/* Vibrancy: small text over a blurred photo needs more than flat gray to stay
    legible as the picture behind it changes -- full ink and a heavier weight. */
 .sk-group .label { color: var(--ink); font-weight: 500; }
 .sk-side.left .sk-group { justify-items: end; }
@@ -449,16 +420,11 @@ p { margin: 0; }
 }
 .sk-readout .mini {
   width: 64px; height: 68px; border-radius: 11px; background: var(--c); color: var(--t); padding: 6px 8px;
-  display: grid; grid-template-rows: auto 1fr;
+  display: grid; place-items: center;
 }
-.sk-readout .mini small { font-family: var(--f-mono); font-size: .5938rem; opacity: .7; }
-.sk-readout .mini b { font-size: 1.625rem; font-weight: 700; letter-spacing: -.04em; align-self: end; line-height: 1; }
+.sk-readout .mini b { font-size: 1.625rem; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
 .sk-readout h3 { font-size: 1.125rem; letter-spacing: -.02em; line-height: 1.2; }
 .sk-readout p { color: var(--ink-2); font-size: .8125rem; line-height: 1.45; }
-/* Switching between the desk and the table: the new view fades in where the
-   old one was, instead of cutting. */
-.sk-view { animation: view-in .28s ease both; }
-@keyframes view-in { from { opacity: 0; } }
 /* Below this the side columns would cover him, so the scene becomes a
    cropped band and the skills flow underneath on paper. */
 @media (max-width: 1100px) {
@@ -489,9 +455,11 @@ p { margin: 0; }
   transition: transform var(--spring) var(--ease-spring), box-shadow var(--spring) var(--ease-spring);
 }
 @media (hover: hover) {
-  .work-card:hover { transform: translateY(-4px); box-shadow: 0 18px 34px -22px rgba(28, 29, 44, .45); }
+  .work-card:hover { transform: translateY(-4px); box-shadow: var(--lift-shadow); }
   .work-card:hover .work-open { color: var(--accent); }
 }
+/* The whole card is the target, so the whole card answers the press. */
+.work-card:active { transform: scale(.985); box-shadow: none; transition: transform var(--press), box-shadow var(--press); }
 .work-cover {
   border-radius: 13px; background: var(--paper-2); overflow: hidden;
   aspect-ratio: 4 / 3; display: grid; place-items: center;
@@ -499,14 +467,15 @@ p { margin: 0; }
 .work-cover svg { width: 100%; height: 100%; }
 .work-meta { display: grid; gap: 7px; }
 .work-meta h3 { font-size: 1.0625rem; letter-spacing: -.02em; line-height: 1.25; }
-/* Stretched over the card, so the card is one target while the <h3> stays a
-   heading. */
-.work-open {
+/* A card's trigger: a real button inside its heading, stretched over the card
+   so the card is one target while the <h3> stays a heading. The card draws the
+   focus ring, since the button itself is only as big as its text. */
+.work-open, .tl-open {
   font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
-  transition: color .2s;
 }
-.work-open::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
-.work-open:focus-visible { outline: none; }
+.work-open { transition: color .2s; }
+.work-open::after, .tl-open::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.work-open:focus-visible, .tl-open:focus-visible { outline: none; }
 .work-card:has(.work-open:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
 .work-meta p { color: var(--ink-2); font-size: .8125rem; line-height: 1.5; }
 
@@ -546,11 +515,6 @@ p { margin: 0; }
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   border: 1px solid transparent; transition: border-color .25s;
 }
-.tl-open {
-  font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
-}
-.tl-open::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
-.tl-open:focus-visible { outline: none; }
 .tl-card.opens:has(.tl-open:focus-visible)::after { border-color: var(--accent); }
 .tl-more {
   display: inline-flex; align-items: center; gap: 6px; margin-top: 4px;
@@ -563,29 +527,57 @@ p { margin: 0; }
   .tl-card.opens:hover::after { border-color: var(--line); }
   .tl-card.opens:hover .tl-more { color: var(--ink); gap: 10px; }
 }
+/* After the hover rule, so a press reads even while hovered. */
+.tl-card.opens:active { background: color-mix(in srgb, var(--paper-2) 80%, transparent); transition: background-color var(--press); }
 
-/* ── role dialog ─────────────────────────── */
+.tl-card .kind { display: inline-flex; width: fit-content; font-family: var(--f-mono); font-size: .6563rem; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--line); color: var(--ink-2); }
+.tl-item.edu .kind { background: var(--navy); color: var(--paper); border-color: var(--navy); }
+.tl-card h3 { font-size: 1.375rem; letter-spacing: -.02em; }
+.tl-card .org { color: var(--ink-2); font-size: .9375rem; }
+.tl-card .org em { font-family: var(--f-serif); font-size: 1.0625rem; color: var(--ink-3); }
+.tl-card p { color: var(--ink-2); max-width: 64ch; font-size: .9375rem; }
+
+/* ── dialogs ─────────────────────────────── */
+/* A modal task: the scrim dims and blurs the page to focus attention, and the
+   panel materializes out of whatever opened it (--ox / --oy, set by
+   Dialog.jsx) -- blur, scale and opacity arriving together rather than a
+   plain fade. Transitions, not keyframes, so closing mid-open reverses from
+   the current frame. On the way out it shrinks back along the same path with
+   the mirrored curve, and stops catching clicks at once. */
 .dlg-back {
   position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
   padding: clamp(16px, 5vw, 48px);
   background: color-mix(in srgb, var(--ink) 42%, transparent);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  animation: dlg-in .2s ease;
+  backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0);
+  opacity: 0;
+  transition: opacity var(--spring-fast) var(--ease-spring),
+    backdrop-filter var(--spring-fast) var(--ease-spring), -webkit-backdrop-filter var(--spring-fast) var(--ease-spring);
 }
+.dlg-back.is-open { opacity: 1; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.dlg-back.is-closing { pointer-events: none; transition-duration: .28s; transition-timing-function: var(--ease-exit); }
 .dlg {
   position: relative; width: min(680px, 100%); max-height: min(78vh, 760px); overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--card); border: 1px solid var(--line); border-radius: 22px;
   padding: clamp(24px, 4vw, 40px);
   box-shadow: 0 40px 90px -30px rgba(28, 29, 44, .5);
-  animation: dlg-rise .26s var(--ease-spring, cubic-bezier(.2, .8, .2, 1));
+  transform-origin: var(--ox, 50%) var(--oy, 50%);
+  transform: scale(.9); filter: blur(4px);
+  transition: transform var(--spring) var(--ease-spring), filter var(--spring-fast) var(--ease-spring);
 }
+.dlg-back.is-open .dlg { transform: none; filter: none; }
+.dlg-back.is-closing .dlg { transition-duration: .28s; transition-timing-function: var(--ease-exit); }
 .dlg-x {
   position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%;
   display: grid; place-items: center; cursor: pointer;
-  background: var(--paper); border: 1px solid var(--line); color: var(--ink-2); transition: all .2s;
+  background: var(--paper); border: 1px solid var(--line); color: var(--ink-2);
+  transition: transform var(--spring-fast) var(--ease-spring), background-color .2s, color .2s, border-color .2s;
 }
+/* A 34px circle is under the 44px a finger needs; the hit area reaches past it. */
+.dlg-x::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; }
 .dlg-x svg { width: 15px; height: 15px; }
 @media (hover: hover) { .dlg-x:hover { background: var(--navy); color: var(--paper); border-color: var(--navy); } }
+.dlg-x:active { transform: scale(.9); transition: transform var(--press); }
 .dlg-head { display: grid; gap: 7px; padding-right: 40px; margin-bottom: 22px; }
 .dlg-head h3 { font-size: clamp(1.375rem, 2.4vw, 1.75rem); letter-spacing: -.025em; line-height: 1.15; }
 .dlg-head .org { color: var(--ink-2); font-size: .9375rem; }
@@ -595,7 +587,7 @@ p { margin: 0; }
 .dlg-points li {
   position: relative; padding-left: 20px; color: var(--ink-2); font-size: .9375rem; line-height: 1.55;
 }
-/* A labelled block inside the dialog -- coursework, the transcript button. */
+/* A labeled block inside the dialog -- coursework, the transcript button. */
 .dlg-group { display: grid; gap: 10px; justify-items: start; }
 .dlg-group .label { color: var(--ink-3); }
 
@@ -603,56 +595,81 @@ p { margin: 0; }
   content: ''; position: absolute; left: 0; top: .55em; width: 6px; height: 6px;
   border-radius: 2px; background: var(--accent);
 }
-@keyframes dlg-in { from { opacity: 0 } }
-@keyframes dlg-rise { from { opacity: 0; transform: translateY(14px) scale(.98) } }
-@media (prefers-reduced-motion: reduce) {
-  .dlg-back, .dlg { animation: none; }
+/* Document preview (résumé, certificates): wider than a role, the page
+   scrolls under a sticky bar holding its name and the download. */
+.dlg.dlg-preview { width: min(860px, 100%); max-height: 90vh; padding: 0; background: var(--paper); }
+.dlg-preview .dlg-x { top: 16px; z-index: 2; }
+.pv-bar {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 64px 16px 22px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
 }
-.tl-card .kind { display: inline-flex; width: fit-content; font-family: var(--f-mono); font-size: .6563rem; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--line); color: var(--ink-2); }
-.tl-item.edu .kind { background: var(--navy); color: var(--paper); border-color: var(--navy); }
-.tl-card h3 { font-size: 1.375rem; letter-spacing: -.02em; }
-.tl-card .org { color: var(--ink-2); font-size: .9375rem; }
-.tl-card .org em { font-family: var(--f-serif); font-size: 1.0625rem; color: var(--ink-3); }
-.tl-card p { color: var(--ink-2); max-width: 64ch; font-size: .9375rem; }
+.pv-title { display: grid; gap: 4px; min-width: 0; }
+.pv-title .label { color: var(--ink-3); }
+.pv-title h3 { font-size: 1.125rem; letter-spacing: -.02em; line-height: 1.2; }
+.pv-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.pv-page { padding: clamp(12px, 3vw, 28px); }
+.pv-page img {
+  display: block; width: 100%; height: auto; border-radius: 6px; background: #fff;
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px rgba(28, 29, 44, .45);
+}
+@media (max-width: 520px) {
+  .pv-bar { padding: 14px 58px 14px 16px; }
+  .pv-acts { width: 100%; }
+}
 
-/* Heading above, cards below -- the same shape as the Achievements grid. */
+/* Heading above, cards below -- the same shape as the Highlights grid. */
 .learn { margin-top: clamp(70px, 9vw, 120px); display: grid; gap: clamp(28px, 4vw, 44px); }
 .learn-head h3 { font-size: clamp(2.25rem, 4.6vw, 3.75rem); letter-spacing: -.04em; line-height: 1; }
 .learn-head h3 .serif { color: var(--ink-2); }
 .learn-head p { color: var(--ink-2); margin-top: 14px; max-width: 46ch; }
 
-/* auto-fit rather than a fixed column count, so adding a fifth certification
-   reflows instead of leaving a hole in the row. */
-.certs { display: grid; grid-template-columns: repeat(auto-fit, minmax(248px, 1fr)); gap: 12px; }
+/* Compact tiles, narrow enough that all five sit in one row on a desktop
+   rather than leaving one stretched card alone underneath. auto-fit reflows
+   them on smaller screens, and grid-auto-rows: 1fr keeps every row the same
+   height when they do wrap. */
+.certs { display: grid; grid-template-columns: repeat(auto-fit, minmax(196px, 1fr)); grid-auto-rows: 1fr; gap: 10px; }
 .cert-card {
-  background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px;
-  display: grid; gap: 16px; align-content: space-between; min-height: 212px;
-  transition: transform var(--spring) var(--ease-spring), box-shadow var(--spring) var(--ease-spring);
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px;
+  /* Badge on top, details straight under it, buttons pinned to the bottom:
+     the same skeleton in every card whatever the details run to. */
+  display: grid; grid-template-rows: auto 1fr auto; gap: 14px;
 }
-@media (hover: hover) {
-  .cert-card:hover { transform: translateY(-4px); box-shadow: 0 18px 34px -22px rgba(28, 29, 44, .45); }
-}
+/* No lift on hover: the card itself isn't a target (its buttons are), and a
+   card that rises under the pointer promises a click it can't keep. Only the
+   project cards, which do open, lift. */
 .cert-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .cert-mark {
   width: 42px; height: 42px; border-radius: 12px; flex: none; overflow: hidden;
   background: var(--navy); color: var(--paper); display: grid; place-items: center;
   font-family: var(--f-mono); font-size: .8125rem; letter-spacing: .02em;
 }
-.cert-mark img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
-.cert-meta h4 { font-size: .9375rem; font-weight: 600; line-height: 1.3; letter-spacing: -.01em; }
-.cert-meta small { display: block; margin-top: 4px; color: var(--ink-3); font-size: .8125rem; }
+.cert-mark img { width: 100%; height: 100%; object-fit: contain; }
+/* The issuer's own badge: shown as itself, a little larger, with no tile. */
+.cert-mark.badge { width: 46px; height: 46px; border-radius: 0; background: none; overflow: visible; }
+/* Room for two lines on every title, so the issuer and IDs below start at
+   the same height in each card whether the name wraps or not. */
+.cert-meta h4 { font-size: .875rem; font-weight: 600; line-height: 1.3; letter-spacing: -.01em; min-height: 2.6em; }
+.cert-meta .nowrap { white-space: nowrap; }
+.cert-meta small { display: block; margin-top: 2px; color: var(--ink-3); font-size: .8125rem; }
 .cert-sub {
   display: block; margin-top: 5px; font-family: var(--f-mono); font-size: .625rem;
   letter-spacing: .08em; color: var(--ink-3);
+  /* Long credential IDs run on after "ID" and break mid-string, rather than
+     leaving "ID" alone on a line above them. */
+  word-break: break-all;
 }
-.cert-acts { display: flex; flex-wrap: wrap; gap: 6px; }
-.cert-acts .btn { padding: 7px 13px; font-size: .75rem; }
+.cert-acts { display: flex; flex-wrap: wrap; gap: 4px; }
+.cert-acts .btn { padding: 6px 11px; font-size: .75rem; }
+.cert-acts .btn.plain { padding-inline: 8px; }
 .cert-acts .btn svg { width: 12px; height: 12px; }
 
 /* ── moments ─────────────────────────────── */
 .moments { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.moment { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: grid; gap: 14px; align-content: space-between; min-height: 220px; transition: transform var(--spring) var(--ease-spring); }
-@media (hover: hover) { .moment:hover { transform: translateY(-4px); } }
+.moment { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: grid; gap: 14px; align-content: space-between; min-height: 220px; }
 .moment .where { display: flex; justify-content: space-between; align-items: center; }
 .moment .num { font-size: clamp(3rem, 5.4vw, 4.5rem); font-weight: 700; letter-spacing: -.05em; line-height: 1; font-variant-numeric: tabular-nums; }
 .moment .num sup { font-size: .45em; vertical-align: .9em; color: var(--accent); margin-left: 2px; }
@@ -660,13 +677,13 @@ p { margin: 0; }
 
 /* ── contact ─────────────────────────────── */
 .contact { background: var(--navy); color: var(--paper); border-radius: 32px 32px 0 0; margin-top: 40px; }
-.contact .label { color: #a9abc4; }
+.contact .label { color: var(--on-navy-2); }
 .contact h2 { font-size: clamp(3.5rem, 11vw, 10rem); line-height: .9; letter-spacing: -.055em; font-weight: 700; }
-.contact h2 .serif { color: #c4c5da; }
+.contact h2 .serif { color: var(--on-navy); }
 .contact-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; margin-top: 40px; }
-.contact p { color: #c4c5da; max-width: 46ch; font-size: 1.0625rem; }
-.links { display: grid; border-top: 1px solid rgba(241,239,232,.18); }
-.links a, .links .mail { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 18px 2px; border-bottom: 1px solid rgba(241,239,232,.18); text-decoration: none; font-size: 1.125rem; min-width: 0; }
+.contact p { color: var(--on-navy); max-width: 46ch; font-size: 1.0625rem; }
+.links { display: grid; border-top: 1px solid var(--on-navy-line); }
+.links a, .links .mail { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 18px 2px; border-bottom: 1px solid var(--on-navy-line); text-decoration: none; font-size: 1.125rem; min-width: 0; }
 /* Transform, not padding, so the hover never triggers layout */
 .links a > * { transition: transform var(--spring-fast) var(--ease-spring); }
 @media (hover: hover) {
@@ -675,13 +692,14 @@ p { margin: 0; }
 }
 .links a:active > * { transform: translateX(4px); transition: transform var(--press); }
 .links svg { width: 16px; height: 16px; }
-.links .k { font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: #a9abc4; }
+.links .k { font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--on-navy-2); }
 .mail span { overflow-wrap: anywhere; }
-.copy { border: 1px solid rgba(241,239,232,.3); background: transparent; color: var(--paper); border-radius: 999px; padding: 5px 12px; font-size: .75rem; cursor: pointer; flex: none; transition: transform var(--spring-fast) var(--ease-spring), background-color .2s, color .2s; }
+.copy { border: 1px solid rgba(241,239,232,.3); background: transparent; color: var(--paper); border-radius: 999px; padding: 5px 12px; font-size: .75rem; cursor: pointer; flex: none; transition: transform var(--spring-fast) var(--ease-spring), background-color .2s, color .2s, border-color .2s; }
+@media (hover: hover) { .copy:hover { border-color: var(--paper); } }
 .copy:active { transform: scale(.95); transition: transform var(--press); }
 /* completion feedback: the button itself confirms the copy */
 .copy.done { background: var(--paper); color: var(--navy); }
-.foot-line { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-block: 50px 30px; font-size: .8125rem; color: #a9abc4; }
+.foot-line { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding-block: 50px 30px; font-size: .8125rem; color: var(--on-navy-2); }
 
 /* ── reveal helper ───────────────────────── */
 /* Revealed elements are VISIBLE by default, so the page reads correctly with no
@@ -694,9 +712,6 @@ p { margin: 0; }
 /* ── responsive ──────────────────────────── */
 @media (max-width: 1020px) {
   .about-grid { grid-template-columns: minmax(0, 1fr); }
-  .table-wrap { grid-template-columns: minmax(0, 1fr); }
-  .detail { position: static; min-height: 0; grid-template-columns: 110px minmax(0, 1fr); align-items: center; }
-  .detail .big { grid-row: span 3; }
   .moments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 860px) {
@@ -717,14 +732,8 @@ p { margin: 0; }
   .contact-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 620px) {
-  .about-grid { grid-template-columns: minmax(0, 1fr); }
   .moments { grid-template-columns: minmax(0, 1fr); }
   .moment { min-height: 0; }
-  .ptable { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
-  .el b { font-size: 1.0625rem; }
-  .el span { display: none; }
-  .detail { grid-template-columns: minmax(0, 1fr); }
-  .detail .big { grid-row: auto; }
   .facts dd { text-align: left; }
   .facts div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   /* Timeline: a year column beside the card leaves the card a ~180px strip
@@ -742,7 +751,7 @@ p { margin: 0; }
   .links .k { grid-column: 1 / -1; }
 }
 /* Reduced motion is not "no feedback". Nothing slides, lifts or springs, but
-   colour and opacity changes stay as short cross-fades because they still
+   color and opacity changes stay as short cross-fades because they still
    tell you what happened. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -751,8 +760,10 @@ p { margin: 0; }
     transition-duration: .2s !important; transition-delay: 0s !important;
     animation: none !important;
   }
-  .btn:hover, .btn:active, .btn svg, .chip:active, .el, .el.on, .el:hover, .el:active, .sk:hover, .sk:active,
-  .moment:hover, .links a > *, .copy:active, .card-id.held, .work-card:hover, .cert-card:hover { transform: none !important; }
+  .btn:hover, .btn:active, .btn svg, .sk:hover, .sk:active, .links a > *, .copy:active,
+  .card-id.held, .work-card:hover, .work-card:active, .dlg-x:active { transform: none !important; }
+  /* Dialogs cross-fade in place: no growing out of the trigger, no blur pass. */
+  .dlg { transform: none !important; filter: none !important; }
   /* The badge doesn't turn over: the faces cross-fade in place instead. */
   .card-3d.flipped, .card-face.back { transform: none; }
   .card-face.back { opacity: 0; pointer-events: none; }
@@ -764,10 +775,13 @@ p { margin: 0; }
   .pill { background: var(--card); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .sk-group, .sk-readout { background: var(--card); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .nav::before { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .dlg-back, .dlg-back.is-open { background: color-mix(in srgb, var(--ink) 60%, transparent); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .pv-bar { background: var(--card); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 /* More contrast: solid surfaces, defined borders, darker secondary ink */
 @media (prefers-contrast: more) {
   :root { --ink-2: #33354a; --ink-3: #4f5163; --line: #8b8c98; }
   .pill { background: var(--card); backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--ink); }
-  .btn, .chip, .work-card, .cert-card, .moment, .detail, .sk, .sk-readout { border-color: var(--ink-2); }
+  .btn, .work-card, .cert-card, .moment, .sk, .sk-readout, .sk-group, .dlg, .dlg-x { border-color: var(--ink-2); }
+  .sk-group, .sk-readout { background: var(--card); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }

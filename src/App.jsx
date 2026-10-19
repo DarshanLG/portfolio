@@ -11,6 +11,7 @@ import Experience from './components/Experience.jsx'
 import Education from './components/Education.jsx'
 import Moments from './components/Moments.jsx'
 import Contact from './components/Contact.jsx'
+import ResumeDialog from './components/ResumeDialog.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -30,7 +31,21 @@ export function resumeProps(className = '', focusable = true) {
     rel: 'noreferrer',
     'aria-disabled': on ? undefined : 'true',
     tabIndex: on && focusable ? undefined : -1,
+    // A plain click shows the résumé in ResumeDialog first; a modified click
+    // (new tab, save link) still goes straight to the PDF.
+    onClick: on ? openResume : undefined,
   }
+}
+
+// An ordinary left click, as opposed to one asking for a new tab or a save.
+// Links that preview something in a dialog only intercept these.
+export const isPlainClick = (e) =>
+  !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0)
+
+function openResume(e) {
+  if (!isPlainClick(e)) return
+  e.preventDefault()
+  window.dispatchEvent(new Event('open-resume'))
 }
 
 // Run `fn` once the page is actually on screen, and return a cleanup function.
@@ -129,6 +144,7 @@ export default function App() {
         <Moments />
       </main>
       <Contact />
+      <ResumeDialog />
     </>
   )
 }

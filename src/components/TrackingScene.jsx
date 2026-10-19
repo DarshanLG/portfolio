@@ -5,8 +5,8 @@ import { reduced } from '../App.jsx'
 // whose head turns to follow the cursor.
 //
 // There are nine renders of the scene, one per head pose (3x3: up / level /
-// down by left / centre / right). The neutral pose is the background. The
-// other eight only differ around the head, so docs/scene-poses.py cuts that
+// down by left / center / right). The neutral pose is the background. The
+// other eight only differ around the head, so scene-poses.py (kept offline) cuts that
 // region out of each into one atlas (scene-heads.webp) plus a feathered mask
 // (scene-mask.png). The shader draws the background and pastes the current
 // head over it through the mask, cross-fading for a moment when the pose
@@ -103,7 +103,7 @@ function setup(canvas, images) {
 }
 
 // Screen point -> look direction in [-1, 1]. tanh keeps it lively near the
-// face and saturates gently towards the edges of the screen.
+// face and saturates gently toward the edges of the screen.
 function lookFrom(eye, x, y) {
   const sx = Math.max(window.innerWidth * 0.32, 260)
   const sy = Math.max(window.innerHeight * 0.36, 260)

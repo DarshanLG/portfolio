@@ -5,7 +5,7 @@ import { reduced } from '../App.jsx'
 const items = [
   ['about', 'About'], ['skills', 'Skills'], ['work', 'Work'],
   ['experience', 'Experience'], ['education', 'Education'],
-  ['moments', 'Achievements'], ['contact', 'Contact'],
+  ['moments', 'Highlights'], ['contact', 'Contact'],
 ]
 
 export default function Nav() {
@@ -48,7 +48,7 @@ export default function Nav() {
   }, [])
 
   // Move the shared indicator under the active link. Layout effect so it is
-  // placed in the same frame the link changes colour, with no flash in between.
+  // placed in the same frame the link changes color, with no flash in between.
   useLayoutEffect(() => {
     const place = () => {
       const marker = ind.current

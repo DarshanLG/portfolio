@@ -8,31 +8,37 @@ export const profile = {
   shortName: 'Darshan Goneppanavar',
   initials: 'DG',
   title: ['Software', 'Engineer'],
-  tagline: 'Full stack apps, event-driven backends and applied AI. Five years of shipping to production.',
+  tagline: 'Full stack apps, event-driven backends and applied AI. 4+ years of shipping to production.',
   location: 'Long Beach, CA',
-  email: 'darshanlg.usa@gmail.com',
+  email: 'darshanlg5766@gmail.com',
   linkedin: 'https://www.linkedin.com/in/darshanlg',
   github: 'https://github.com/DarshanLG',
-  resume: './resume.pdf',
+  // The Résumé dialog shows resume-preview.png (the page rendered at 200 dpi,
+  // phone number left out) and downloads Resume.docx. Re-render the preview
+  // whenever the DOCX changes.
+  resume: './resume/Resume.docx',
+  resumePreview: './resume/resume-preview.png',
+  resumeFile: 'Darshan_Goneppanavar_Resume.docx',
   // Every Résumé link on the site reads this. While false they still show in
   // place but are inert -- no href, not focusable, visibly dimmed. Flip it to
   // true to switch them all back on: hero badge, About and Contact.
-  resumeEnabled: false,
+  resumeEnabled: true,
 
-  // Drop your files into /public and set these, e.g. './hero.mp4' and './portrait.jpg'
+  // Drop your files into /public and set these, e.g. './hero/hero.mp4' and './profile/portrait.jpg'
   // hero.webm carries an alpha channel so the giant background name shows
   // through around the figure; hero.mp4 is the fallback for browsers that
   // can't decode VP9 alpha (notably Safari), where the backdrop stays opaque.
-  heroVideo: './hero.mp4',
-  heroVideoAlpha: './hero.webm',
-  heroPoster: './hero-poster.png',
-  photo: './portrait.jpg',
+  heroVideo: './hero/hero.mp4',
+  heroVideoAlpha: './hero/hero.webm',
+  heroPoster: './hero/hero-poster.png',
+  photo: './profile/portrait.jpg',
 
 }
 
 // Skills backdrop: nine renders of Darshan at his desk, one per head pose.
-// Built from docs/scene/head_{row}_{col}.jpg by docs/scene-poses.py, which
-// prints size / box / face. Re-run it and paste the numbers if they change.
+// Built from head_{row}_{col}.jpg by scene-poses.py (both kept offline, not in
+// this project), which prints size / box / face. Re-run it and paste the
+// numbers here if the renders change.
 export const scene = {
   src: './scene/scene.webp',          // neutral pose, full size
   srcSm: './scene/scene-sm.webp',     // neutral pose, 1280px for phones
@@ -45,15 +51,15 @@ export const scene = {
 }
 
 export const heroStats = [
-  { value: '5 yrs', label: 'in production' },
-  { value: '10K', label: 'users on my platform' },
+  { value: '4+ yrs', label: 'in production' },
+  { value: '5K', label: 'users on my platform' },
   { value: 'Dec 2026', label: 'MS CS, CSULB' },
 ]
 
 export const about = {
   bio: [
     'I build and run production systems end to end: full stack web apps, payment pipelines, data platforms and applied AI. I like owning the whole path, from the schema and the webhook retries to the empty state on the screen.',
-    'Right now I am finishing an MS in Computer Science at CSULB, where I am the sole developer on a platform serving 10,000 users.',
+    'Right now I am finishing an MS in Computer Science at CSULB, where I am the sole developer on a platform serving 5,000 users.',
   ],
   facts: [
     ['Based in', 'Long Beach, CA'],
@@ -66,7 +72,7 @@ export const about = {
   badgeId: 'DLG-2021',
 }
 
-// Families drive the colour of each tile in the periodic table.
+// Families group the skills into the desk scene's cards and set each badge's color.
 export const families = [
   { id: 'lang', label: 'Languages' },
   { id: 'fe', label: 'Frontend' },
@@ -77,9 +83,9 @@ export const families = [
 ]
 
 export const skills = [
-  { s: 'Py', name: 'Python', f: 'lang', used: 'Retrieval layer for NL search, FastAPI chatbot, transformer training' },
+  { s: 'Py', name: 'Python', f: 'lang', used: 'PPO from scratch for Astro Lander, FastAPI services' },
   { s: 'Ts', name: 'TypeScript', f: 'lang', used: 'Node middleware handling 2,000+ req/s at Hutech' },
-  { s: 'Js', name: 'JavaScript', f: 'lang', used: 'React and Node features on a 178M-customer platform' },
+  { s: 'Js', name: 'JavaScript', f: 'lang', used: 'React and Node features for a Fortune 500 client serving millions of members' },
   { s: 'Sq', name: 'SQL', f: 'lang', used: 'Reporting aggregations, query tuning, migrations' },
   { s: 'Ph', name: 'PHP 8', f: 'lang', used: 'Sole-owner migration of a legacy enterprise platform' },
 
@@ -90,7 +96,7 @@ export const skills = [
 
   { s: 'No', name: 'Node.js', f: 'be', used: 'Middleware with Redis caching, 17% lower latency' },
   { s: 'Ex', name: 'Express', f: 'be', used: 'API for the form-automation model' },
-  { s: 'Fa', name: 'FastAPI', f: 'be', used: 'RAG chatbot answering 70% of staff questions' },
+  { s: 'Fa', name: 'FastAPI', f: 'be', used: 'RAG chatbot for university staff (in progress)' },
   { s: 'Dj', name: 'Django REST', f: 'be', used: 'Analytics API behind real-time dashboards' },
   { s: 'Gq', name: 'GraphQL', f: 'be', used: 'Microservices on Kubernetes' },
   { s: 'Rd', name: 'Redis', f: 'be', used: 'Caching layer in front of PostgreSQL' },
@@ -100,23 +106,22 @@ export const skills = [
   { s: 'Mg', name: 'MongoDB', f: 'data', used: 'User corrections stored as a retraining signal' },
   { s: 'Kf', name: 'Kafka', f: 'data', used: 'Real-time data pipelines' },
   { s: 'Sp', name: 'Spark', f: 'data', used: 'Stream processing feeding analytics dashboards' },
-  { s: 'If', name: 'Informatica', f: 'data', used: 'ETL loading up to 50M rows per run' },
+  { s: 'If', name: 'Informatica', f: 'data', used: 'ETL against Oracle for multi-million-row daily loads' },
 
-  { s: 'Pt', name: 'PyTorch', f: 'ai', used: '124M-parameter transformer trained from scratch' },
-  { s: 'Tr', name: 'Triton', f: 'ai', used: 'Fused kernels: 1.9× softmax, 2.3× LayerNorm' },
-  { s: 'Lo', name: 'LoRA', f: 'ai', used: 'Fine-tuned SmolVLM-2B to 87% action accuracy' },
+  { s: 'Pt', name: 'PyTorch', f: 'ai', used: 'PPO written from scratch, matching Stable-Baselines3 (272.6 vs 275.6)' },
+  { s: 'Lo', name: 'LoRA', f: 'ai', used: 'Fine-tuning a vision-language model for form automation (in progress)' },
   { s: 'Rg', name: 'RAG', f: 'ai', used: 'Chunking and retrieval tuning for the staff chatbot' },
-  { s: 'Cd', name: 'ChromaDB', f: 'ai', used: 'Vector store for search over 62 tables' },
+  { s: 'Cd', name: 'ChromaDB', f: 'ai', used: 'Vector store for the staff chatbot (in progress)' },
   { s: 'Oa', name: 'OpenAI API', f: 'ai', used: 'Embeddings and GPT-4 generation' },
   { s: 'Cl', name: 'Claude API', f: 'ai', used: 'LLM features and evaluation' },
   { s: 'Lc', name: 'LangChain', f: 'ai', used: 'Retrieval pipelines' },
 
-  { s: 'Aw', name: 'AWS', f: 'ops', used: 'Lambda, API Gateway, SQS, SNS, S3, CloudWatch' },
+  { s: 'Aw', name: 'AWS', f: 'ops', used: 'SNS and SQS payment events, CloudWatch logs and alarms' },
   { s: 'Gc', name: 'Google Cloud', f: 'ops', used: 'Associate Cloud Engineer certified' },
   { s: 'Az', name: 'Azure', f: 'ops', used: 'AZ-104 Administrator certified' },
-  { s: 'Dk', name: 'Docker', f: 'ops', used: 'Containerised services' },
+  { s: 'Dk', name: 'Docker', f: 'ops', used: 'Containerized services' },
   { s: 'K8', name: 'Kubernetes', f: 'ops', used: 'Deployed GraphQL and REST microservices' },
-  { s: 'Jk', name: 'Jenkins', f: 'ops', used: 'CI/CD that cut deploys from 3 h to 45 min' },
+  { s: 'Jk', name: 'Jenkins', f: 'ops', used: 'Maintained CI/CD pipelines with unit and integration test gates' },
   { s: 'Ga', name: 'GitHub Actions', f: 'ops', used: 'Build and test automation' },
 ]
 
@@ -132,7 +137,7 @@ export const projects = [
       'PPO implemented from scratch (GAE, clipping, vectorized rollouts, normalization), matching Stable-Baselines3: 273 vs 276 score, both landing 100% of the time',
       'Found that textbook potential-based reward shaping makes the agent crash every time, traced it to two terminal-state effects, and fixed it (back to 100% landings)',
       'Domain randomization (random gravity, wind, turbulence) cut crashes in wind from 36% to 11%',
-      'Trained networks run unchanged in a JavaScript physics port (planck.js): same behaviour, no backend',
+      'Trained networks run unchanged in a JavaScript physics port (planck.js): same behavior, no backend',
       '27 agents, 3 seeds each, scored on 100 held-out episodes per agent; 14 pytest tests',
     ],
     tags: ['PyTorch', 'PPO', 'Gymnasium', 'Box2D', 'planck.js', 'GitHub Pages'],
@@ -179,7 +184,7 @@ export const projects = [
     points: [
       'Trained on 2.4B tokens across two A100s with DDP, bf16 and gradient checkpointing',
       'Fused Triton kernels: 1.9× faster softmax, 2.3× faster LayerNorm',
-      'INT8 quantisation + KV cache cut inference memory 68% at <0.5% perplexity cost',
+      'INT8 quantization + KV cache cut inference memory 68% at <0.5% perplexity cost',
     ],
     tags: ['PyTorch', 'Triton', 'DDP', 'CUDA'],
     link: '',
@@ -211,17 +216,20 @@ export const experience = [
     period: 'March 2025 — Present',
     role: 'Full Stack Developer, Graduate Assistant',
     org: 'California State University, Long Beach',
-    where: 'Long Beach, CA',
-    text: 'Sole developer on a 10,000-user platform migration at 99.9% stability. Built the PayPal verification pipeline, natural-language search and the RAG chatbot.',
+    where: 'Long Beach, CA · part-time',
+    text: 'Sole developer migrating a 5,000-user enterprise platform from PHP 7 to PHP 8 at 99.9% monitored uptime. Moved payments from legacy PayPal Hosted Buttons to PayPal NCP.',
     details: [
-      'Achieved complete transaction capture on the PayPal NCP vendor migration by architecting a three-layer verification pipeline across PDT, REST API and webhook channels, with SHA256-RSA signature validation, OAuth2 and idempotent handlers covering retry, replay and partial failure on AWS API Gateway and Lambda, with CloudWatch monitoring inbound event delivery.',
-      'Maintained 99.9% stability for 10,000 users as sole developer owning an end-to-end migration of a legacy enterprise platform to PHP 8, making all architecture, data modelling and rollout decisions independently, and remediating security vulnerabilities including SQL injection, XSS and access control gaps.',
-      'Reduced staff record lookup time by 60% by building a natural-language search experience over 62 database tables, designing the query interface, result presentation and empty and loading states on a Python retrieval layer using OpenAI embeddings and ChromaDB.',
-      'Resolved 70% of routine staff inquiries without human intervention by building a retrieval-augmented chatbot on FastAPI and GPT-4, tuning chunking and retrieval strategies and evaluating LLM output correctness and data sensitivity before release.',
-      'Replaced recurring manual financial reporting with a filterable reporting interface backed by SQL aggregation, date range controls and one-click Excel export using SheetJS.',
-      'Established the first knowledge base for the project across 17 Confluence pages and set up JIRA Kanban workflows for tracking work across releases.',
+      'Sole developer migrating a legacy enterprise platform serving 5,000 users from PHP 7 to PHP 8, owning architecture, data modeling, rollout and production support, and reconstructing undocumented code paths, at 99.9% monitored uptime.',
+      'Remediated SQL injection, XSS and access-control vulnerabilities across the platform as part of the PHP 8 modernization.',
+      'Migrated payments from legacy PayPal Hosted Buttons to PayPal NCP with a three-layer verification pipeline (PDT, REST API, webhooks), secured with SHA-256 hashing, RSA signature validation, full OAuth2 token lifecycle management and idempotent handlers for retry, replay and partial failure.',
+      'Diagnosed PayPal payments that failed to register when a compliance hold outlasted the pending match window, corrected the affected records and shipped an admin safeguard against repeat failures.',
+      'Saved staff 3+ hours per week of manual financial reporting by building a filterable reporting module with SQL aggregation, date-range controls and one-click Excel export (SheetJS).',
+      'Built multi-step approval and document upload workflows in JavaScript, HTML and CSS, gathering requirements directly with staff and iterating on their feedback across releases.',
+      'Triaged payment, refund and enrollment escalations with the program director and coordinator in weekly scrums, turning them into prioritized production fixes.',
+      'Created the project\'s first Jira Kanban workflow and a 17-page Confluence knowledge base with runbooks and onboarding material.',
+      'In progress: an AI assistant combining natural-language search over the platform\'s database and a retrieval-augmented chatbot (FastAPI, OpenAI embeddings, ChromaDB).',
     ],
-    tags: ['PHP 8', 'AWS Lambda', 'FastAPI', 'ChromaDB'],
+    tags: ['PHP 8', 'SQL', 'PayPal', 'JavaScript', 'OAuth2'],
   },
   {
     kind: 'Work',
@@ -230,50 +238,85 @@ export const experience = [
     role: 'Software Developer',
     org: 'Hutech Solutions',
     where: 'Bengaluru · six-person startup',
-    text: 'Node and TypeScript middleware at 2,000+ requests per second, RazorPay payments over SNS/SQS at 50,000+ weekly transactions, Kafka and Spark pipelines.',
+    text: 'Node and TypeScript middleware at 2,000+ requests per second, RazorPay payments over SNS/SQS at 5,000+ weekly transactions, React interfaces for 10,000 monthly active users.',
     details: [
-      'Sustained over 2,000 requests per second and cut latency 17% by building Node.js and TypeScript middleware with Redis caching against PostgreSQL, writing queries, migrations and schema changes across releases.',
-      'Processed over 50,000 weekly transactions and raised transaction success rate 16% by implementing a RazorPay payment integration with AWS SNS and SQS webhook processing, exponential backoff and idempotent handlers.',
-      'Reduced vulnerability surface 90% by hardening all user-facing endpoints with input validation, XSS protection and parameterised queries.',
-      'Secured user access across the platform by building JWT-based single sign-on and role-based access control for login and authorisation.',
-      'Built and deployed backend microservices exposing GraphQL and REST APIs on Kubernetes, owning service design through release.',
-      'Built real-time data pipelines with Kafka and Spark, and analytics dashboards on React, Django REST and PostgreSQL.',
-      'Increased user engagement 20% for 10,000 monthly active users by building responsive React, Next.js, Redux and Tailwind CSS interfaces from Figma designs, with sortable and filterable data tables and loading and error states, covered by Jest and React Testing Library.',
-      'Cut data retrieval times 40% while handling over 5,000 real-time updates daily by integrating Google Maps location tracking views.',
+      'Sustained 2,000+ requests per second at peak and cut end-to-end latency 17% by building Node.js and TypeScript middleware with Redis caching over PostgreSQL, choosing cache keys and eviction strategy, and writing queries, migrations and schema changes across releases.',
+      'Raised transaction success rate 16% across 5,000+ weekly transactions by integrating RazorPay with HMAC-SHA256 webhook verification, AWS SNS and SQS event processing, exponential backoff and idempotent handlers.',
+      'Built and deployed backend microservices exposing GraphQL and REST APIs on Docker and Kubernetes, owning service design through release.',
+      'Implemented JWT-based single sign-on and role-based access control across login, admin and payment features, with session and token lifecycle handling and API key rotation.',
+      'Built Kafka and Spark pipelines streaming real-time events to analytics dashboards on React, Django REST and PostgreSQL.',
+      'Lifted user engagement 20% for 10,000 monthly active users by building responsive React, Next.js, Redux and Tailwind CSS interfaces from Figma designs, with sortable and filterable data tables and loading and error states.',
+      'Covered UI components with Jest and React Testing Library as a merge gate, catching regressions before release.',
+      'Cut data retrieval time 40% across 5,000+ daily real-time location updates in Google Maps tracking views.',
+      'Hardened all user-facing endpoints with input validation, XSS protection and parameterized PostgreSQL queries, and enforced secure coding practices across the team to prevent injection attacks.',
+      'Monitored services with AWS CloudWatch logs and alarms on a client project for an interior-design company.',
     ],
-    tags: ['Node.js', 'PostgreSQL', 'Redis', 'Kafka', 'Kubernetes'],
+    tags: ['Node.js', 'TypeScript', 'PostgreSQL', 'Redis', 'Kafka', 'Kubernetes'],
   },
   {
     kind: 'Work',
-    from: '2021', to: '2024',
-    period: 'October 2021 — February 2024',
+    from: '2022', to: '2024',
+    period: 'November 2022 — January 2024',
     role: 'Application Developer Analyst',
     org: 'Accenture',
-    where: 'Bengaluru · promoted from Associate in 2022',
-    text: 'Full stack features on a health insurance platform serving 178M customers. Informatica ETL loading up to 50M rows a run. Jenkins pipelines that cut deploys from 3 hours to 45 minutes.',
+    where: 'Bengaluru · Fortune 500 US health insurer',
+    text: 'React and Node.js features on a member-facing health insurance platform, plus Informatica ETL against Oracle for multi-million-row daily loads.',
     details: [
-      'Delivered production features across a full stack React and Node.js health insurance platform backed by Oracle, serving 178 million customers for a Fortune 500 client, contributing to design reviews and code reviews alongside 12 engineers in Agile sprints.',
-      'Loaded 1 to 50 million rows per run daily by building Informatica ETL mappings and workflows end to end against Oracle, tuning slow and failing loads and automating job control with Unix shell scripts.',
-      'Cut deployment time 75%, from 3 hours to 45 minutes, by managing automated Jenkins CI/CD release pipelines with unit and integration testing built into the deployment gate.',
-      'Decreased page load times 20% and lifted user retention 5% by refactoring frontend architecture, Redux state management and client-side routing.',
-      'Reduced JS and CSS transfer size 18% over gzip by adding build-time Brotli compression to a MERN asset pipeline.',
-      'Cut new-hire onboarding time 50% by mentoring junior developers through onboarding and pair programming, establishing coding standards, Git workflows and documentation practices.',
+      'Promoted to Analyst while continuing to develop and optimize a massive-scale health insurance platform for a Fortune 500 client serving millions of members, delivering React and Node.js features backed by Oracle while also taking on ownership of its Informatica ETL workflows, leading technical initiatives and mentoring junior developers within a 12-engineer Agile team.',
+      'Built Informatica ETL mappings and workflows against Oracle for multi-million-row daily batch loads, diagnosing failing loads through query plans, session logs and Unix shell job wrappers.',
+      'Automated ETL job control and failure recovery with Unix shell scripts, bringing runtimes back inside the batch window.',
+      'Maintained Jenkins CI/CD pipelines for releases and test data provisioning, with unit and integration test gates.',
+      'Engineered unit test suites and ran system-wide testing to verify feature reliability before UAT.',
+      'Facilitated sprint planning, code reviews and technical grooming sessions in Jira.',
+      'Navigated a large legacy codebase to debug issues in code written by other engineers, and gathered feature requirements with client stakeholders.',
+      'Mentored 3 junior developers through onboarding and pair programming, and helped set coding standards and Git workflows.',
     ],
     tags: ['React', 'Node.js', 'Oracle', 'Informatica', 'Jenkins'],
   },
   {
     kind: 'Work',
+    from: '2021', to: '2022',
+    period: 'October 2021 — October 2022',
+    role: 'Application Developer Associate',
+    org: 'Accenture',
+    where: 'Bengaluru',
+    text: 'Frontend performance work on a high-traffic React and Node.js application: 20% faster page loads, 5% higher retention.',
+    details: [
+      'Cut page load times 20% and lifted user retention 5% (per client monitoring) by refactoring frontend architecture, Redux state management and client-side routing.',
+      'Reduced JS and CSS transfer size 18% over gzip by adding build-time Brotli compression to a MERN asset pipeline.',
+      'Shipped production-ready features for a high-traffic React and Node.js application, collaborating in a cross-functional Agile pod of 12 engineers to deliver high-availability modules.',
+      'Built a fully deployed MERN employee-lifecycle application with full CRUD functionality during Accenture\'s project-based graduate training program (Python, MySQL, JavaScript, React, Node.js, Express).',
+    ],
+    tags: ['React', 'Redux', 'Node.js', 'MongoDB'],
+  },
+  {
+    kind: 'Work',
+    from: '2021', to: '2021',
+    period: 'April 2021 — May 2021',
+    role: 'Student Intern',
+    org: 'hermitcrabs',
+    where: 'Bengaluru · remote · HubSpot CMS agency',
+    text: 'Built HubSpot CMS pages, templates and custom HTML, CSS and JavaScript modules for client websites.',
+    details: [
+      'Built HubSpot CMS pages and reusable templates for client websites at a HubSpot development and design agency.',
+      'Developed custom HTML, CSS and JavaScript modules for HubSpot themes.',
+      'Contributed to a MongoDB-backed feature during the internship.',
+    ],
+    tags: ['HubSpot CMS', 'HTML', 'CSS', 'JavaScript'],
+  },
+  {
+    kind: 'Work',
     from: '2019', to: '2020',
     period: 'October 2019 — April 2020',
-    role: 'Blockchain Research Associate',
+    role: 'Blockchain Research Intern',
     org: 'IoTracx',
     where: 'Bengaluru',
     text: 'Compared consensus algorithms, smart contracts and network throughput to guide DApp architecture.',
     details: [
-      'Evaluated scalability and throughput across public and private blockchain networks to inform architecture choices for decentralised applications.',
+      'Evaluated scalability and throughput across public and private blockchain networks to inform architecture choices for decentralized applications.',
       'Researched distributed consensus algorithms, smart contracts and DApp architectures, comparing their tradeoffs in fault tolerance and performance.',
     ],
-    tags: [],
+    tags: ['Python', 'Smart Contracts'],
   },
 ]
 
@@ -305,7 +348,7 @@ export const education = [
     period: 'August 2017 — August 2021',
     role: 'BE in Computer Science',
     org: 'Visvesvaraya Technological University',
-    where: 'Bengaluru',
+    where: 'Global Academy of Technology, Bengaluru',
     text: '',
     // Add the modules you want to show and this one becomes clickable too.
     courses: [],
@@ -325,44 +368,79 @@ export const education = [
 //   credentialId      the ID the issuer printed on it
 //   verify            the issuer's verification URL ('Show credential')
 //   pdf               put the file in /public, e.g. './certs/az-104.pdf'
-//   logo              issuer mark in /public; without one the card draws a
-//                     monogram from `org` instead
+//   preview           the certificate as an image, shown in the dialog that
+//                     opens before the PDF downloads; [width, height] in `size`
+//   logo              the badge image in /public/certs; without one the card
+//                     draws a monogram from `org` instead
+//
+// Newest first. Dates, IDs and links match LinkedIn and the issuer's PDFs.
+// Previews are the PDFs rendered at 200 dpi and cropped to the certificate
+// (the DP-900 PDF is rotated, the AZ-104 one is a browser printout).
+// Cloud Digital Leader's expiry and ID come from its renewed certificate
+// (Sep 2027); LinkedIn still showed Oct 2027 and the old ID.
 export const certifications = [
   {
-    name: 'Google Associate Cloud Engineer',
+    name: 'Google Cloud Associate Cloud Engineer',
     org: 'Google Cloud',
     year: '2023',
-    issued: '', expires: '', credentialId: '',
-    verify: '', pdf: '', logo: '',
-  },
-  {
-    name: 'Google Cloud Digital Leader',
-    org: 'Google Cloud',
-    year: '2023',
-    issued: '', expires: '', credentialId: '',
-    verify: '', pdf: '', logo: '',
+    issued: 'November 2023', expires: 'November 2026',
+    credentialId: '1c587aa1dcbf4ae4b11f7d8168c1b8ad',
+    verify: 'https://www.credly.com/badges/f73265ee-7f3b-4607-abbc-cba042d3d6be/public_url',
+    pdf: './certs/gcp-associate-cloud-engineer.pdf',
+    preview: './certs/gcp-associate-cloud-engineer.webp', size: [1800, 1366],
+    logo: './certs/badge-gcp-ace.png',
   },
   {
     name: 'Azure Administrator Associate (AZ-104)',
     org: 'Microsoft',
     year: '2023',
-    issued: '', expires: '', credentialId: '',
-    verify: '', pdf: '', logo: '',
+    issued: 'November 2023', expires: 'November 2027',
+    credentialId: 'FE0FC815E12195BE',
+    verify: 'https://learn.microsoft.com/api/credentials/share/en-us/DarshanLG-4495/FE0FC815E12195BE?sharingId=E29EC8F33D7645F3',
+    pdf: './certs/azure-az-104.pdf',
+    preview: './certs/azure-az-104.webp', size: [1800, 950],
+    logo: './certs/badge-az-104.svg',
+  },
+  {
+    name: 'Google Cloud Digital Leader',
+    org: 'Google Cloud',
+    year: '2023',
+    issued: 'August 2023', expires: 'September 2027',
+    credentialId: 'd8a35926132d4a8d8d97bd1d10cf8eed',
+    verify: 'https://www.credly.com/badges/e1fc5f6a-61e1-4563-9b83-40d554e2d9ba/public_url',
+    pdf: './certs/gcp-cloud-digital-leader.pdf',
+    preview: './certs/gcp-cloud-digital-leader.webp', size: [1800, 1366],
+    logo: './certs/badge-gcp-cdl.png',
+  },
+  {
+    name: 'Azure Data Fundamentals (DP-900)',
+    org: 'Microsoft',
+    year: '2023',
+    issued: 'July 2023', expires: '',
+    credentialId: 'DAACBDDF2F2B8375',
+    verify: 'https://learn.microsoft.com/api/credentials/share/en-us/DarshanLG-4495/DAACBDDF2F2B8375?sharingId=E29EC8F33D7645F3',
+    pdf: './certs/azure-dp-900.pdf',
+    preview: './certs/azure-dp-900.webp', size: [1800, 944],
+    logo: './certs/badge-dp-900.svg',
   },
   {
     name: 'Azure Fundamentals (AZ-900)',
     org: 'Microsoft',
     year: '2022',
-    issued: '', expires: '', credentialId: '',
-    verify: '', pdf: '', logo: '',
+    issued: 'November 2022', expires: '',
+    credentialId: 'C1703AD19D32090A',
+    verify: 'https://learn.microsoft.com/api/credentials/share/en-us/DarshanLG-4495/C1703AD19D32090A?sharingId=E29EC8F33D7645F3',
+    pdf: './certs/azure-az-900.pdf',
+    preview: './certs/azure-az-900.webp', size: [1800, 921],
+    logo: './certs/badge-az-900.svg',
   },
 ]
 
 export const moments = [
-  { n: 178, suffix: 'M', label: 'customers on the insurance platform I shipped features to', where: 'Accenture' },
-  { n: 10000, suffix: '', label: 'users on a platform I migrated alone, at 99.9% stability', where: 'CSULB' },
-  { n: 2000, suffix: '+', label: 'requests per second through my Node middleware', where: 'Hutech' },
-  { n: 50000, suffix: '+', label: 'payment transactions processed every week', where: 'Hutech' },
-  { n: 2.4, suffix: 'B', decimals: 1, label: 'tokens used to train my transformer from scratch', where: 'Project' },
-  { n: 75, suffix: '%', label: 'faster deploys, from 3 hours down to 45 minutes', where: 'Accenture' },
+  { n: 5000, suffix: '', label: 'users on a platform I migrated alone from PHP 7 to PHP 8, at 99.9% uptime', where: 'CSULB' },
+  { n: 2000, suffix: '+', label: 'requests per second through my Node middleware, with latency cut 17%', where: 'Hutech' },
+  { n: 5000, suffix: '+', label: 'weekly RazorPay transactions, with success rate up 16%', where: 'Hutech' },
+  { n: 10000, suffix: '', label: 'monthly active users on React interfaces that lifted engagement 20%', where: 'Hutech' },
+  { n: 3.3, suffix: '×', decimals: 1, label: 'fewer crashes in wind for my PPO rocket lander (36% down to 11%)', where: 'Astro Lander' },
+  { n: 20, suffix: '%', label: 'faster page loads after refactoring the frontend architecture', where: 'Accenture' },
 ]

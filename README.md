@@ -8,23 +8,32 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-## Add your media
-1. Put your hero video in `public/hero.mp4` (portrait, plain background works best) and set `heroVideo: './hero.mp4'` in `src/data.js`.
-2. Put a portrait in `public/portrait.jpg` and set `photo: './portrait.jpg'` — it shows on the ID badge.
-3. Replace `public/resume.pdf` whenever your resume changes.
-4. Add GitHub links per project with the `link` field in `projects`.
+## Where the media lives
+Everything the site loads is in `public/`, one folder per kind:
+
+| Folder | Contents |
+| --- | --- |
+| `public/` (root) | `favicon.svg`, `og.png` (link-preview image; scrapers expect it at the root) |
+| `public/hero/` | `hero.webm` (alpha), `hero.mp4` (fallback), `hero-poster.png` |
+| `public/profile/` | `portrait.jpg` for the ID badge |
+| `public/resume/` | `Resume.docx` (download) and `resume-preview.png` (shown in the dialog) |
+| `public/certs/` | certificate PDFs, their `.webp` previews, issuer badges |
+| `public/scene/` | Skills desk scene: background, head atlas, mask |
+
+Paths are set in `src/data.js`. Replace a file in place to update it; re-render
+`resume-preview.png` whenever the DOCX changes. Add GitHub links per project
+with the `link` field in `projects`.
 
 ## Deploy (free)
 - **Vercel:** import the repo → framework "Vite" → deploy.
 - **Netlify:** build command `npm run build`, publish directory `dist`.
 - **GitHub Pages:** `npm run build` and publish the `dist` folder.
 
-### After the first deploy — set the real domain
-`index.html` hard-codes `https://darshangoneppanavar.com/` in the canonical,
-`og:url` and `og:image` tags. Open Graph requires **absolute** URLs, so link
-previews stay blank until these point at the live domain. Replace all four
-occurrences, redeploy, then confirm with
-[LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/).
+### Live at https://darshanlg-portfolio.vercel.app/
+`index.html` hard-codes this URL in the canonical, `og:url`, `og:image` and
+`twitter:image` tags. Open Graph requires **absolute** URLs, so if the site
+moves to a custom domain, replace all four occurrences, redeploy, then confirm
+with [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/).
 
 The preview image is `public/og.png` (1512×795) — replace it to change how the
 site looks when the link is shared. Keep the 1.91:1 aspect ratio and update the

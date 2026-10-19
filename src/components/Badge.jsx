@@ -73,7 +73,7 @@ export default function Badge() {
     // Measured from .rig itself -- a zero-size element sitting exactly at the
     // hanging point. The lanyard no longer hangs from the middle of the stage
     // (it is lined up with a letter of the background name), so assuming the
-    // centre here would swing the card around the wrong point.
+    // center here would swing the card around the wrong point.
     const pointerAngle = (e) => {
       const r = el.parentElement.getBoundingClientRect()
       return Math.atan2(-(e.clientX - r.left), Math.max(40, e.clientY - r.top))
@@ -89,7 +89,7 @@ export default function Badge() {
       // Where the press started, so a release can tell a tap from a throw.
       startPt = [e.clientX, e.clientY]
       // Keep the point they grabbed under the pointer, rather than snapping
-      // the card's centre line to it.
+      // the card's center line to it.
       grab = angle - pointerAngle(e)
       omega = 0
       samples = [{ t: e.timeStamp, a: angle }]

@@ -5,14 +5,14 @@ import Badge from './Badge.jsx'
 import { reduced, onVisible } from '../App.jsx'
 
 // Where the figure's head sits inside the video frame, measured from the clip
-// itself and averaged over its length (he gestures, so the horizontal centre
+// itself and averaged over its length (he gestures, so the horizontal center
 // drifts; the top of his head barely moves). Re-measure if the clip changes.
-const HEAD_X = 0.4965   // centre of the head, across the frame
+const HEAD_X = 0.4965   // center of the head, across the frame
 const HEAD_TOP = 0.1338 // top of the hair, down the frame
 const FEET = 0.9512     // soles, down the frame
 const FEET_GAP = 10     // breathing room between the soles and the hero's edge
 // Top of the hole inside the A, down the letter's own box (Geist 800; measured
-// by rasterising the glyph). The head and the lanyard both start on this
+// by rasterizing the glyph). The head and the lanyard both start on this
 // line. Re-measure if the display font changes.
 const A_CAVITY = 0.375
 const STRAP = 104       // lanyard between the letter and the top of the card
@@ -25,7 +25,7 @@ const HINT_W = 110      // room the "drag it / tap to flip" label needs beside t
 export default function Hero() {
   const root = useRef(null)
 
-  // Line the figure's head up with the first A of the background name -- centred
+  // Line the figure's head up with the first A of the background name -- centered
   // under it, top of the head where the hole in the A begins -- and hang the
   // lanyard from the second A, its top on the same line as his head.
   //
@@ -67,7 +67,7 @@ export default function Hero() {
       const gBox = ghost.getBoundingClientRect()
       const hBox = hero.getBoundingClientRect()
       if (!gBox.width) return
-      // Undo the parallax: the name is centred on the hero when untransformed.
+      // Undo the parallax: the name is centered on the hero when untransformed.
       const base = hBox.left + hBox.width / 2 - gBox.width / 2
       const at = (i) => {
         const b = letters[i].getBoundingClientRect()

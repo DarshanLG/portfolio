@@ -7,7 +7,7 @@ export default function About() {
     <section className="section" id="about">
       <div className="wrap about-grid">
         <div className="about-copy rv">
-          <span className="label">01 — About</span>
+          <span className="label">About</span>
           <h2>Hi, I'm <span className="serif">{profile.firstName}.</span></h2>
           {about.bio.map((p, i) => <p key={i}>{p}</p>)}
           <div className="row">

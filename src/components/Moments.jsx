@@ -33,8 +33,9 @@ export default function Moments() {
     <section className="section" id="moments" ref={root}>
       <div className="wrap">
         <div className="section-head rv">
-          <span className="label">06 — Achievements</span>
+          <span className="label">Highlights</span>
           <h2>Proud <span className="serif">moments.</span></h2>
+          <p>The numbers behind the work, from production and from the lab.</p>
         </div>
         <div className="moments">
           {moments.map((m) => (

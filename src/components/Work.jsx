@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react'
 import { projects } from '../data.js'
 import Cover from './Covers.jsx'
 import ProjectDialog from './ProjectDialog.jsx'
+import { useDialog } from './Dialog.jsx'
 
 // Project cards, in the same mould as the certification tiles. The whole card
 // opens a dialog with the full write-up.
@@ -11,24 +11,23 @@ import ProjectDialog from './ProjectDialog.jsx'
 // heading for anyone scanning the page, and gives keyboard and screen-reader
 // users the role for free instead of a div pretending to be a button.
 export default function Work() {
-  const [open, setOpen] = useState(null)
-  const close = useCallback(() => setOpen(null), [])
+  const [open, setOpen, close] = useDialog()
 
   return (
     <section className="section" id="work">
       <div className="wrap">
         <div className="section-head rv">
-          <span className="label">03 — Selected work</span>
+          <span className="label">Selected work</span>
           <h2>Things I've <span className="serif">built.</span></h2>
-          <p>Four projects. Open one for how it was built and what it does.</p>
+          <p>Open one for how it was built and what it does.</p>
         </div>
 
         <div className="work-grid">
-          {projects.map((p, i) => (
+          {projects.map((p) => (
             <article className="work-card rv" key={p.id}>
               <div className="work-cover" aria-hidden="true"><Cover kind={p.cover} /></div>
               <div className="work-meta">
-                <span className="label">{String(i + 1).padStart(2, '0')} — {p.kicker}</span>
+                <span className="label">{p.kicker}</span>
                 <h3>
                   <button type="button" className="work-open" onClick={() => setOpen(p)}>
                     {p.title}

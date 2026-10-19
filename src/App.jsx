@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Analytics } from '@vercel/analytics/react'
 import { profile } from './data.js'
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
@@ -145,6 +146,9 @@ export default function App() {
       </main>
       <Contact />
       <ResumeDialog />
+      {/* Vercel Web Analytics: cookieless visitor and page-view counts for the
+          Vercel dashboard. It only reports from the deployed site. */}
+      <Analytics />
     </>
   )
 }
